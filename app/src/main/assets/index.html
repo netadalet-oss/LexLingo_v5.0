@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes,viewport-fit=cover">
+<title>LexLingo</title>
+<style>
+:root{
+  --bg:#020711;--bg2:#06152b;--panel:rgba(13,25,45,.92);--panel2:rgba(18,33,58,.96);
+  --line:rgba(148,163,184,.20);--cyan:#34c6f4;--cyan2:#0ea5e9;--gold:#d8b35f;--gold2:#f4da8f;
+  --text:#f7f9ff;--muted:#a6b1c5;--good:#25c46b;--bad:#f25b74;--ui:1;--tight:.72;
+  --radius:18px;--headerH:150px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;overflow-x:hidden;color:var(--text);background:radial-gradient(circle at 45% 0,#102950 0,#06142a 40%,#020711 100%);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;user-select:none;-webkit-user-select:none}
+body{padding:0 10px calc(78px + env(safe-area-inset-bottom));max-width:760px;margin-inline:auto;touch-action:pan-y}
+button,input,select,textarea{font:inherit}
+button,.btn,.tabBtn,.iconBtn{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+button{border:0;border-radius:calc(16px * var(--ui));padding:calc(9px * var(--ui)) calc(11px * var(--ui));background:linear-gradient(180deg,#44c7f7,#0aa7e5);color:#04111d;font-weight:850;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 8px 18px rgba(14,165,233,.14)}
+button.ghost,.tabBtn{background:linear-gradient(180deg,rgba(31,53,84,.98),rgba(14,27,50,.98));color:var(--text);border:1px solid rgba(56,194,242,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 16px rgba(2,132,199,.10)}
+button:active{transform:translateY(1px)}
+input,select,textarea{width:100%;border:1px solid rgba(148,163,184,.20);border-radius:calc(15px * var(--ui));background:rgba(239,244,251,.96);color:#111827;outline:none;padding:calc(9px * var(--ui)) calc(11px * var(--ui));user-select:text;-webkit-user-select:text}
+textarea{min-height:96px;resize:vertical}
+.appHeader{position:sticky;top:0;z-index:80;margin:0 -10px;padding:calc(7px + env(safe-area-inset-top)) 10px 7px;background:linear-gradient(180deg,rgba(3,8,18,.98),rgba(3,8,18,.92));backdrop-filter:blur(14px);border-bottom:1px solid rgba(207,168,90,.14)}
+.brand{display:grid;grid-template-columns:88px 1fr 64px;gap:8px;align-items:center;min-height:92px}
+.logoImg{width:88px;height:88px;border-radius:16px;object-fit:cover;object-position:center 40%;background:#07101f;transform:scale(1.06);box-shadow:0 0 0 1px rgba(207,168,90,.45)}
+.titleBlock{text-align:center;min-width:0}
+h1{margin:0 0 3px;font-size:calc(29px * var(--ui));line-height:1;font-weight:900;letter-spacing:-.7px}
+.sub{font-size:calc(12px * var(--ui));color:#cbd5e1;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.copy{color:var(--gold2);font-size:calc(12px * var(--ui));font-weight:850;margin-top:2px}
+.site{color:var(--gold2);font-size:calc(11px * var(--ui));font-weight:750;margin-top:1px}
+.profileMini{justify-self:end;text-align:center;color:#c3ccdb;font-size:calc(11px * var(--ui));position:relative}
+.profileIcon{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;margin:auto;background:radial-gradient(circle at 50% 30%,rgba(216,179,95,.22),rgba(15,23,42,.95));border:1px solid rgba(216,179,95,.62);color:var(--gold2);font-size:26px}
+.profileName{margin-top:3px;white-space:nowrap}
+.ticker{height:26px;border-radius:999px;border:1px solid rgba(216,179,95,.42);background:rgba(15,23,42,.62);display:flex;align-items:center;justify-content:flex-start;overflow:hidden;margin-top:7px;color:#f8dfa0;font-size:calc(11.5px * var(--ui));font-weight:600;letter-spacing:.1px}.ticker span{display:inline-block;white-space:nowrap;min-width:max-content;padding-left:100%;animation:tickerMove 24s linear infinite;color:#f8dfa0}.ticker:hover span{animation-play-state:paused}@keyframes tickerMove{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+.dashboard{padding-top:8px}
+.topstats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:7px}
+.stat{min-height:56px;border-radius:17px;background:linear-gradient(180deg,rgba(21,39,68,.94),rgba(10,21,39,.92));border:1px solid rgba(148,163,184,.18);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 3px}
+.stat b{font-size:calc(22px * var(--ui));line-height:1;color:var(--cyan);font-weight:900}
+.stat span{font-size:calc(11px * var(--ui));color:#dbe4f0;margin-top:3px}
+.compactPanel{border-radius:17px;background:rgba(15,23,42,.56);border:1px solid rgba(148,163,184,.18);padding:6px 10px;margin-bottom:6px}
+.scoreRow{display:flex;align-items:center;justify-content:space-between;color:#d7deea;font-size:calc(12px * var(--ui));margin-bottom:4px}
+.bar{height:7px;border-radius:999px;background:rgba(148,163,184,.27);overflow:hidden}
+.barFill{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--gold2));border-radius:999px}
+.scaleGrid{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px}
+.scaleLabel{font-size:calc(12px * var(--ui));color:#eff5ff;white-space:nowrap}
+.scaleGrid input[type=range]{padding:0;height:18px;accent-color:var(--cyan);background:transparent;border:0}
+.scaleEnd{font-size:calc(11px * var(--ui));color:#aeb8c9}
+.pickerRow{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:6px}
+.pickerBtn{min-height:44px;text-align:center;font-size:calc(14px * var(--ui));border-radius:17px;overflow:hidden;text-overflow:ellipsis;white-space:normal;line-height:1.15;position:relative}.pickerBtn::before{content:attr(data-label);position:absolute;top:3px;left:0;right:0;text-align:center;color:rgba(244,218,143,.62);font-size:calc(9px * var(--ui));font-weight:650;letter-spacing:.2px;pointer-events:none}.pickerBtn{padding-top:13px!important}
+.searchWrap{position:relative;margin-bottom:6px}
+.searchWrap input{background:linear-gradient(180deg,#edf2f8,#e2e8f0);padding-left:40px;padding-right:42px;font-size:calc(13px * var(--ui));min-height:44px}
+.searchIcon{position:absolute;top:50%;transform:translateY(-50%);width:32px;height:32px;display:grid;place-items:center;color:#64748b;font-size:18px;z-index:2}
+.searchIcon.left{left:5px}.searchIcon.right{right:5px}
+.topActions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:6px}
+.topActions button{min-height:40px;font-size:calc(12.5px * var(--ui));padding:8px 6px;border-radius:16px}
+#view{padding-bottom:12px}
+.card{position:relative;background:linear-gradient(180deg,rgba(18,33,58,.95),rgba(8,18,34,.95));border:1px solid rgba(148,163,184,.20);border-radius:22px;padding:12px;margin-top:8px;box-shadow:0 14px 34px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.035)}
+.card.expanded{position:fixed;left:10px;right:10px;top:calc(var(--headerH) + 8px);bottom:calc(78px + env(safe-area-inset-bottom));z-index:70;overflow:auto;margin:0;max-width:740px;margin-inline:auto;padding:14px;border-color:rgba(216,179,95,.42)}
+.moduleTools{position:absolute;right:8px;top:8px;display:flex;gap:6px;z-index:5}
+.iconBtn{width:32px;height:32px;padding:0;border-radius:11px;display:grid;place-items:center;font-size:17px}
+.badge{display:inline-flex;align-items:center;gap:6px;margin-bottom:8px;padding:5px 10px;border-radius:999px;border:1px solid rgba(56,194,242,.34);background:rgba(14,165,233,.14);font-size:calc(11.5px * var(--ui));font-weight:850;color:#c8f2ff;max-width:calc(100% - 80px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.word{font-size:calc(28px * var(--ui));font-weight:900;text-align:center;letter-spacing:-.4px;margin:2px 0 8px;line-height:1.1}
+.line{display:grid;grid-template-columns:32px 78px 1fr;gap:8px;align-items:center;min-height:42px;padding:7px 2px;border-top:1px solid rgba(148,163,184,.15);cursor:pointer}
+.label{font-size:calc(12px * var(--ui));color:#c9d3e2;font-weight:700}
+.value{font-size:calc(14px * var(--ui));line-height:1.32;word-break:break-word;user-select:text;-webkit-user-select:text}
+.hidden{filter:blur(6px);opacity:.58;user-select:none;-webkit-user-select:none}
+.speaker{width:28px;height:28px;padding:0;border-radius:50%;font-size:14px;display:grid;place-items:center;color:#62d3ff!important;background:linear-gradient(180deg,rgba(33,53,82,.98),rgba(12,24,45,.98))!important;border:1px solid rgba(216,179,95,.55)!important;box-shadow:none!important;position:relative}
+.speaker::after{content:'';position:absolute;right:6px;bottom:6px;width:5px;height:5px;border-radius:50%;background:var(--gold2);opacity:.78}
+.speaker.playing{border-color:#56d6ff!important;box-shadow:0 0 0 2px rgba(56,194,242,.12)!important}
+.speaker.stop::before{content:'■';position:absolute;font-size:9px;color:#fff;right:2px;top:1px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
+.row4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:8px}
+.moduleNav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}
+.moduleNav button,.row2 button,.row3 button,.row4 button{font-size:calc(11.5px * var(--ui));padding:8px 5px;border-radius:15px}
+.note,.hint,.source{font-size:calc(11.5px * var(--ui));color:var(--muted);line-height:1.4;margin:6px 0}
+.goldNote,.sysNote{color:var(--gold2)!important;font-size:calc(11.5px * var(--ui));line-height:1.4}
+.source{color:#f3d98d}
+.goodText{color:#8af0b4}.badText{color:#fda4af}.danger{background:linear-gradient(180deg,#fb7185,#e11d48)!important;color:#fff!important}.goldActive{color:var(--gold2)!important;border-color:rgba(216,179,95,.72)!important}
+.example{border-color:rgba(216,179,95,.26)}
+.listBox{max-height:calc(100vh - var(--headerH) - 178px);overflow:auto;padding-right:2px;scrollbar-width:thin}
+.listItem{display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:center;padding:8px 4px;border-top:1px solid rgba(148,163,184,.13)}
+.listItem b{font-size:calc(14px * var(--ui));display:block}
+.listItem small{display:block;font-size:calc(11px * var(--ui));color:#aab6c9;margin-top:2px}
+.listPage{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0;color:#dce6f3;font-size:calc(12px * var(--ui))}
+.book{background:linear-gradient(180deg,rgba(252,244,220,.13),rgba(252,244,220,.055));border:1px solid rgba(216,179,95,.28);border-radius:24px;padding:12px;box-shadow:inset 0 0 36px rgba(216,179,95,.045)}
+.bookPage{min-height:260px;max-height:calc(100vh - var(--headerH) - 210px);overflow:auto;padding:12px;border-radius:18px;background:linear-gradient(90deg,rgba(255,252,240,.06),rgba(255,252,240,.025));border-left:4px solid rgba(216,179,95,.42);line-height:1.62;font-size:calc(14px * var(--ui));user-select:text;-webkit-user-select:text}
+.bookPage p{margin:0 0 10px}
+.bookTitle{font-family:Georgia,serif;color:#f6dda0;font-size:calc(17px * var(--ui));font-weight:800;text-align:center;margin:0 0 8px}
+.opts{display:grid;gap:7px;margin-top:8px}
+.opt{text-align:left;background:rgba(148,163,184,.10);color:var(--text);border:1px solid rgba(148,163,184,.20)}
+.opt.good{background:rgba(37,196,107,.25);border-color:rgba(37,196,107,.75)}.opt.wrong{background:rgba(242,91,116,.22);border-color:rgba(242,91,116,.75)}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:90;background:rgba(3,8,18,.96);border-top:1px solid rgba(148,163,184,.18);padding:7px 8px calc(7px + env(safe-area-inset-bottom));backdrop-filter:blur(14px)}
+.tabsInner{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-width:760px;margin:auto}
+.tabBtn{min-width:0;min-height:60px;padding:7px 2px;border-radius:16px;font-size:calc(11px * var(--ui));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.tabIcon{font-size:calc(18px * var(--ui));line-height:1;color:var(--gold2)}
+.tabBtn.active{background:linear-gradient(180deg,#45c7f7,#10a9e8);color:#031018;border-color:rgba(56,194,242,.65)}.tabBtn.active .tabIcon{color:#031018}
+.modalShade{position:fixed;inset:0;z-index:180;background:rgba(2,6,23,.68);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:16px}
+.modalShade.open{display:flex}
+.modalBox{width:min(640px,94vw);max-height:82vh;overflow:auto;background:linear-gradient(180deg,rgba(19,34,60,.99),rgba(7,17,33,.99));border:1px solid rgba(216,179,95,.35);border-radius:24px;padding:12px;box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.modalHead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;color:var(--gold2);font-weight:900}
+.modalClose{width:34px!important;height:34px!important;padding:0!important;border-radius:12px!important;background:rgba(242,91,116,.15)!important;color:#ffd5dc!important;border:1px solid rgba(242,91,116,.35)!important}
+.modalOpt{display:flex;justify-content:space-between;align-items:center;width:100%;margin:4px 0;text-align:left;font-size:calc(13px * var(--ui));border-radius:15px;padding:10px 12px;background:rgba(148,163,184,.08);color:var(--text);border:1px solid rgba(148,163,184,.15)}
+.modalOpt.active{border-color:rgba(56,194,242,.6);background:rgba(14,165,233,.15)}
+.toast,.confirmBox,.reminderOverlay{position:fixed;z-index:220}
+.toast{left:14px;right:14px;bottom:calc(86px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(19,34,60,.99),rgba(7,17,33,.99));border:1px solid rgba(216,179,95,.42);border-radius:18px;padding:12px;color:var(--gold2);font-size:calc(12px * var(--ui));display:none;box-shadow:0 18px 45px rgba(0,0,0,.35)}
+.confirmBox{inset:0;background:rgba(2,6,23,.72);display:none;align-items:center;justify-content:center;padding:18px}
+.confirmCard{width:min(520px,92vw);background:linear-gradient(180deg,rgba(20,36,63,.99),rgba(7,17,33,.99));border:1px solid rgba(216,179,95,.48);border-radius:24px;padding:16px;box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.confirmCard h3{margin:0 0 8px;color:var(--gold2)}
+.confirmCard p{font-size:calc(13px * var(--ui));color:#d9e1ee;line-height:1.45}
+.reminderOverlay{inset:0;background:radial-gradient(circle at 50% 35%,rgba(20,36,63,.98),rgba(3,8,18,.98));display:none;place-items:center;padding:22px}
+.reminderCard{width:min(520px,92vw);position:relative;border:1px solid rgba(216,179,95,.55);border-radius:28px;padding:24px 18px;text-align:center;background:linear-gradient(180deg,rgba(19,34,60,.99),rgba(7,17,33,.99));box-shadow:0 28px 80px rgba(0,0,0,.58)}
+.reminderClose{position:absolute;right:10px;top:10px;width:34px;height:34px;padding:0;border-radius:50%;background:rgba(242,91,116,.18)!important;color:#ffd6dc!important;border:1px solid rgba(242,91,116,.4)!important}
+.formGrid{display:grid;gap:8px;margin-top:8px}
+.formGrid label{font-size:calc(12px * var(--ui));color:#d8e0ed}.aboutText{font-size:calc(12.5px * var(--ui));line-height:1.55;color:#dbe4f2;user-select:text;-webkit-user-select:text}.aboutText p{margin:0 0 10px}.aboutText b{color:var(--gold2)}
+.twoCol{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* LexLingo v4.1 multilingual/PDF revision */
+.langOwn{display:block}
+.langLatin{display:block;color:var(--gold2);font-size:.92em;margin-top:2px;opacity:.92}
+.langPill{display:inline-flex;align-items:center;justify-content:center;min-width:34px;padding:3px 7px;border-radius:999px;border:1px solid rgba(216,179,95,.36);color:var(--gold2);background:rgba(216,179,95,.08);font-size:calc(10px * var(--ui));font-weight:800;margin-right:5px}
+.langBuilder{display:grid;gap:8px;margin-top:8px}
+.langChoices{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.langChoices button{font-size:calc(11px * var(--ui));padding:8px 4px}
+.langChoices button.active{background:linear-gradient(180deg,rgba(216,179,95,.34),rgba(115,82,25,.28));color:#ffe8a8;border-color:rgba(216,179,95,.74)}
+.langOrder{font-size:calc(12px * var(--ui));color:#f6dda0;line-height:1.45}
+.fileHint{font-size:calc(11.5px * var(--ui));color:var(--gold2);line-height:1.4}
+.importGrid{display:grid;gap:8px}
+.rtlText{direction:rtl;text-align:right;font-family:system-ui,'Segoe UI',Tahoma,Arial,sans-serif}
+
+@media(max-width:520px){
+  .brand{grid-template-columns:82px 1fr 58px;min-height:86px}.logoImg{width:82px;height:82px}.profileIcon{width:50px;height:50px;font-size:24px}
+  .topstats{gap:5px}.stat{min-height:52px}.pickerBtn{min-height:42px}.line{grid-template-columns:30px 68px 1fr;gap:7px}.moduleNav{gap:5px}.tabsInner{gap:5px}.tabBtn{min-height:58px}
+}
+</style>
+</head>
+<body>
+<header class="appHeader" id="appHeader">
+  <div class="brand">
+    <img class="logoImg" src="logo.jpg" alt="LexLingo">
+    <div class="titleBlock"><h1>LexLingo</h1><div class="sub">Legal & Language • NL–EN–TR–AR–RU</div><div class="copy">© Av. Can KIZILYAR</div><div class="site">avofis.com</div></div>
+    <div class="profileMini"><div class="profileIcon" onclick="openProfile()">⚖</div><div class="profileName" id="profileName" onclick="openProfile()">giriş/kayıt</div></div>
+  </div>
+  <div class="ticker"><span id="tickerText">avofis.com web portalımız zengin içeriği ile yakında yayında olacak.</span></div>
+</header>
+<section class="dashboard" id="dashboard">
+  <div class="topstats"><div class="stat"><b id="totalWords">0</b><span>Kelime</span></div><div class="stat"><b id="catCount">0</b><span>Kategori</span></div><div class="stat"><b id="sourceCount">0</b><span>Kaynak</span></div><div class="stat"><b id="scoreNum">0</b><span>Skor</span></div></div>
+  <div class="compactPanel"><div class="scoreRow"><span>Kelime ilerleme</span><span id="progText">0/0</span></div><div class="bar"><div class="barFill" id="progFill"></div></div></div>
+  <div class="compactPanel scaleGrid"><span class="scaleLabel">Ekran boyutu: <b id="scaleText">60%</b></span><input id="scaleRange" type="range" min="55" max="125" value="60" step="1" oninput="setScale(this.value)"><span class="scaleEnd">55–125</span></div>
+  <div class="pickerRow"><button class="ghost pickerBtn" id="catBtn" data-label="Kategori seç" onclick="openPicker('cat')">Kategori seç</button><button class="ghost pickerBtn" id="dirBtn" data-label="Dil yönü seç" onclick="openPicker('dir')">Dil yönü seç</button></div>
+  <div class="searchWrap"><span class="searchIcon left">🔎</span><input id="q" placeholder="Ara veya yaz: kelime, çeviri, kök, kaynak cümle..." oninput="applyFilter()"><span class="searchIcon right" onclick="q.focus()">🔍</span></div>
+  <div class="topActions"><button class="ghost" onclick="goStart()">⏮ Başa</button><button class="ghost" onclick="navPrev()">‹ Geri</button><button class="ghost" onclick="navNext()">İleri ›</button><button class="ghost" onclick="randomItem()">🔀 Rasgele</button><button class="ghost" onclick="setMode('read')">📖 Okuma</button><button class="ghost" onclick="setMode('manage')">⚙ Ayar</button></div>
+</section>
+<main id="view"></main>
+<nav class="tabs"><div class="tabsInner"><button class="tabBtn active" id="tabLearn" onclick="setMode('learn')"><span class="tabIcon">▣</span><span>Kart</span></button><button class="tabBtn" id="tabWrite" onclick="setMode('write')"><span class="tabIcon">✎</span><span>Yazma</span></button><button class="tabBtn" id="tabSentences" onclick="setMode('sentences')"><span class="tabIcon">💬</span><span>Cümle</span></button><button class="tabBtn" id="tabParagraph" onclick="setMode('paragraph')"><span class="tabIcon">▤</span><span>Paragraf</span></button><button class="tabBtn" id="tabList" onclick="setMode('list')"><span class="tabIcon">☷</span><span>Liste</span></button><button class="tabBtn" id="tabQuiz" onclick="setMode('quiz')"><span class="tabIcon">?</span><span>Quiz</span></button></div></nav>
+<div class="modalShade" id="modalShade" onclick="closeModalShade(event)"><div class="modalBox" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+<div class="confirmBox" id="confirmBox"><div class="confirmCard"><h3 id="confirmTitle">Onay</h3><p id="confirmMsg"></p><div class="row2"><button class="ghost" onclick="closeConfirm(false)">Vazgeç</button><button onclick="closeConfirm(true)">Onayla</button></div></div></div>
+<div class="reminderOverlay" id="reminderOverlay"></div>
+<script src="data_packs/lex_manifest.js"></script>
+<script src="data_packs/lex_pack_001.js"></script>
+<script src="data_packs/lex_pack_002.js"></script>
+<script src="data_packs/lex_pack_003.js"></script>
+<script src="data_packs/lex_pack_004.js"></script>
+<script src="data_packs/lex_pack_005.js"></script>
+<script src="data_packs/lex_pack_006.js"></script>
+<script src="data_packs/lex_pack_007.js"></script>
+<script src="data_packs/lex_pack_008.js"></script>
+<script src="data_packs/lex_pack_009.js"></script>
+<script src="data_packs/lex_pack_010.js"></script>
+<script src="data_packs/lex_pack_011.js"></script>
+<script src="data_packs/lex_pack_012.js"></script>
+<script src="data_packs/lex_pack_013.js"></script>
+<script src="data_packs/lex_pack_014.js"></script>
+<script src="data_packs/lex_pack_015.js"></script>
+<script src="data_packs/lex_pack_016.js"></script>
+<script src="data_packs/lex_pack_017.js"></script>
+<script src="data_packs/lex_pack_018.js"></script>
+<script src="data_packs/lex_pack_019.js"></script>
+<script src="data_packs/lex_pack_020.js"></script>
+<script src="data_packs/lex_pack_021.js"></script>
+<script src="data_packs/lex_pack_022.js"></script>
+<script src="data_packs/lex_pack_023.js"></script>
+<script src="data_packs/lex_pack_024.js"></script>
+<script src="data_packs/lex_pack_025.js"></script>
+<script src="data_packs/lex_pack_026.js"></script>
+<script src="data_packs/lex_pack_027.js"></script>
+<script src="data_packs/lex_pack_028.js"></script>
+<script src="data_packs/lex_pack_029.js"></script>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const LANGS=[
+  {code:'NL',label:'Hollandaca',field:'nl',latin:'read',voice:'nl-NL'},
+  {code:'EN',label:'İngilizce',field:'en',latin:'enLatin',voice:'en-US'},
+  {code:'TR',label:'Türkçe',field:'tr',latin:'trLatin',voice:'tr-TR'},
+  {code:'AR',label:'Arapça',field:'ar',latin:'arLatin',voice:'ar-SA'},
+  {code:'RU',label:'Rusça',field:'ru',latin:'ruLatin',voice:'ru-RU'}
+];
+const LANG_MAP=Object.fromEntries(LANGS.map(x=>[x.code,x]));
+const DIRS=[
+  ['NL_TR_EN','NL → TR + EN'],
+  ['NL_TR','NL → TR'],
+  ['NL_EN','NL → EN'],
+  ['TR_EN','TR → EN'],
+  ['EN_TR','EN → TR'],
+  ['TR_NL','TR → NL'],
+  ['EN_NL','EN → NL'],
+  ['NL_AR','NL → AR'],
+  ['NL_RU','NL → RU'],
+  ['TR_AR','TR → AR'],
+  ['TR_RU','TR → RU'],
+  ['AR_TR','AR → TR'],
+  ['RU_TR','RU → TR'],
+  ['NL_TR_EN_AR','NL → TR + EN + AR'],
+  ['NL_TR_EN_RU','NL → TR + EN + RU'],
+  ['NL_TR_EN_AR_RU','NL → TR + EN + AR + RU']
+];
+const MODES=['learn','write','sentences','paragraph','read','list','quiz'];
+const LS='lex_v3_';
+const DEFAULT_TICKER='avofis.com web portalımız zengin içeriği ile yakında yayında olacak.';
+let mode='learn',idx=0,page=0,expanded=false,filtered=[],allWordsCache=[],allSourcesCache=[],quiz=null,confirmCb=null,currentAudioKey=null,lastTouch=null,readPage=0,readPages=[];
+let profile={email:localStorage.getItem(LS+'email')||''};
+let settings={cat:localStorage.getItem(LS+'cat')||'ALL',dir:localStorage.getItem(LS+'dir')||'NL_TR_EN',scale:Number(localStorage.getItem(LS+'scale')||60)};
+function getJSON(k,d){try{return JSON.parse(localStorage.getItem(LS+k)||JSON.stringify(d))}catch(e){return d}}
+function setJSON(k,v){localStorage.setItem(LS+k,JSON.stringify(v))}
+function tickerMessages(){return getJSON('tickerMessages',[DEFAULT_TICKER])}
+function updateTicker(){const el=$('tickerText'); if(!el)return; const arr=tickerMessages().map(x=>String(x||'').trim()).filter(Boolean); el.textContent=(arr.length?arr:[DEFAULT_TICKER]).join('   •   ')}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function escAttr(s){return esc(s).replace(/\n/g,' ')}
+function enc(s){return encodeURIComponent(String(s??''))}
+function speakSafe(encoded,lang,key,btn,encodedFallback,fallbackLang){speak(decodeURIComponent(encoded||''),lang,key,btn,encodedFallback?decodeURIComponent(encodedFallback):'',fallbackLang)}
+function startRecognitionSafe(encoded,lang){startRecognition(decodeURIComponent(encoded||''),lang)}
+function norm(s){return String(s||'').toLocaleLowerCase('tr').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim()}
+function packWords(){return (window.LEXLINGO_PACKS||[]).flatMap(p=>p.words||[])}
+function packSources(){return (window.LEXLINGO_PACKS||[]).flatMap(p=>p.sources||[])}
+function customWords(){return getJSON('customWords',[])}
+function customSources(){return getJSON('customSources',[])}
+function customCats(){return getJSON('customCats',[])}
+function hiddenCats(){return new Set(getJSON('hiddenCats',[]))}
+function aliases(){return getJSON('catAliases',{})}
+function catName(c){return aliases()[c]||c}
+function sourceCat(s){return s.cat||s.source||'Genel'}
+function allWords(){const hide=hiddenCats(); allWordsCache=packWords().concat(customWords()).filter(w=>!hide.has(w.cat)); return allWordsCache}
+function allSources(){const hide=hiddenCats(); allSourcesCache=packSources().concat(customSources()).filter(s=>!hide.has(sourceCat(s))); return allSourcesCache}
+function categories(){const hide=hiddenCats(); const set=new Set([...(window.LEXLINGO_CATS||[]),...packWords().map(w=>w.cat),...packSources().map(s=>sourceCat(s)),...customCats()].filter(Boolean).filter(c=>!hide.has(c))); return ['ALL',...Array.from(set)]}
+function selectedWords(){let arr=allWords(); if(settings.cat!=='ALL')arr=arr.filter(w=>w.cat===settings.cat); const qv=norm($('q')?.value||''); if(qv)arr=arr.filter(w=>norm([w.nl,w.read,w.root,w.en,w.tr,w.ar,w.arLatin,w.ru,w.ruLatin,w.cat].join(' ')).includes(qv)); return arr}
+function selectedSources(){let arr=allSources(); if(settings.cat!=='ALL')arr=arr.filter(s=>sourceCat(s)===settings.cat); const qv=norm($('q')?.value||''); if(qv)arr=arr.filter(s=>norm([s.nl,s.read,s.en,s.tr,s.ar,s.arLatin,s.ru,s.ruLatin,s.ref,s.src,sourceCat(s)].join(' ')).includes(qv)); return arr}
+function updateHeaderMetrics(){const words=selectedWords(), src=selectedSources(), cats=categories().filter(c=>c!=='ALL'); $('totalWords').textContent=words.length; $('catCount').textContent=cats.length; $('sourceCount').textContent=src.length; const known=knownSet(); $('scoreNum').textContent=known.size; $('progText').textContent=known.size+'/'+Math.max(1,words.length); $('progFill').style.width=Math.min(100,known.size/Math.max(1,words.length)*100)+'%'; $('profileName').textContent=profile.email?profile.email.split('@')[0]:'giriş/kayıt'; $('catBtn').textContent=settings.cat==='ALL'?'Tüm kategoriler':catName(settings.cat); $('dirBtn').textContent=dirLabel(settings.dir);}
+function setScale(v){v=Math.max(55,Math.min(125,Number(v)||60));settings.scale=v;localStorage.setItem(LS+'scale',String(v)); $('scaleText').textContent=v+'%'; $('scaleRange').value=v; const f=(.58+(v-55)/70*.47).toFixed(3); document.documentElement.style.setProperty('--ui',f); document.documentElement.style.setProperty('--tight',(.64+(v-55)/70*.25).toFixed(3)); updateHeaderHeight();}
+function updateHeaderHeight(){requestAnimationFrame(()=>document.documentElement.style.setProperty('--headerH',($('appHeader').offsetHeight||150)+'px'))}
+function applyFilter(){filtered=selectedWords(); if(idx>=filtered.length)idx=0; page=0; render()}
+function current(){if(!filtered.length)filtered=selectedWords(); return filtered[idx%Math.max(1,filtered.length)]}
+function sourcePool(w){let arr=selectedSources(); if(w&&w.sourceId){let exact=arr.filter(s=>s.id===w.sourceId||s.ref===w.sourceId||s.src===w.sourceId); if(exact.length)return exact} if(w&&w.nl){const n=norm(w.nl); let exact=arr.filter(s=>norm(s.nl).includes(n)); if(exact.length)return exact} return arr}
+function sampleSource(w){const arr=sourcePool(w); return arr[(idx+page)%Math.max(1,arr.length)]||{nl:'Bu kelime için kaynak cümle bulunamadı.',en:'',tr:'',read:'',cat:w?.cat||settings.cat}}
+function knownKey(){return profile.email?'known_'+profile.email:'known_guest'}
+function knownSet(){return new Set(getJSON(knownKey(),[]))}
+function saveKnown(s){setJSON(knownKey(),Array.from(s))}
+function isKnown(id){return knownSet().has(id)}
+function markKnown(){const w=current(); if(!w)return; if(!profile.email){gold('Puanlama için giriş/kayıt yapın.'); openProfile(); return} const s=knownSet(); if(!s.has(w.id)){s.add(w.id); saveKnown(s); gold('Bildim olarak eklendi.')} else gold('Zaten biliyorum. Temizlemek için basılı tutun.'); render()}
+let holdTimer=null; function holdKnownStart(){if(!profile.email)return; holdTimer=setTimeout(()=>{const w=current(),s=knownSet(); if(w&&s.has(w.id)){s.delete(w.id); saveKnown(s); gold('Biliyorum işareti kaldırıldı; puan ve ilerleme geri alındı.'); render()}},850)}
+function holdKnownEnd(){if(holdTimer){clearTimeout(holdTimer);holdTimer=null}}
+function reminders(){return getJSON('reminders',{})}
+function saveReminders(r){setJSON('reminders',r)}
+function toggleReminder(){const w=current(); if(!w)return; let r=reminders(); if(r[w.id]){delete r[w.id]; gold('Hatırlatma kaldırıldı.')} else {r[w.id]={id:w.id,cat:w.cat,nl:w.nl,en:w.en,tr:w.tr,read:w.read,t:Date.now()}; gold('Hatırlatma eklendi.')} saveReminders(r); render()}
+function audioLang(label, fallback){if(fallback)return fallback; const l=LANGS.find(x=>x.label===label||x.code===label); return l?l.voice:'nl-NL'}
+function stopAudio(){try{if(window.AndroidBridge&&AndroidBridge.stop)AndroidBridge.stop()}catch(e){} try{if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){} currentAudioKey=null; document.querySelectorAll('.speaker').forEach(b=>b.classList.remove('playing','stop'))}
+function speak(text,lang,key,btn,fallbackText,fallbackLang){text=String(text||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim(); fallbackText=String(fallbackText||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim(); if(!text&&!fallbackText){gold('Seslendirilecek metin yok.');return} if(currentAudioKey===key){stopAudio();return} stopAudio(); currentAudioKey=key; if(btn)btn.classList.add('playing','stop'); try{if(window.AndroidBridge&&AndroidBridge.speakAlt){AndroidBridge.speakAlt(text,lang||'nl-NL',fallbackText||text,fallbackLang||'tr-TR');return} if(window.AndroidBridge&&AndroidBridge.speak){AndroidBridge.speak(text||fallbackText,lang||fallbackLang||'nl-NL');return}}catch(e){} try{if('speechSynthesis' in window&&typeof SpeechSynthesisUtterance!=='undefined'){let out=text||fallbackText, outLang=lang||'nl-NL'; const voices=speechSynthesis.getVoices?speechSynthesis.getVoices():[]; const primaryOk=!outLang||!voices.length||voices.some(v=>String(v.lang||'').toLowerCase().startsWith(String(outLang).slice(0,2).toLowerCase())); if((outLang||'').match(/^(ar|ru)/i)&&fallbackText&&!primaryOk){out=fallbackText;outLang=fallbackLang||'tr-TR'} const u=new SpeechSynthesisUtterance(out); u.lang=outLang; u.rate=.88; u.onend=stopAudio; u.onerror=stopAudio; speechSynthesis.speak(u); return}}catch(e){} gold('Ses desteği bu cihazda kullanılamadı.')}
+function sp(text,lang,key,fallbackText='',fallbackLang='tr-TR'){return `<button class="speaker" onpointerdown="event.stopPropagation()" onmousedown="event.stopPropagation()" onclick="event.preventDefault();event.stopPropagation();speakSafe('${enc(text)}','${lang}','${key}',this,'${enc(fallbackText||'')}','${fallbackLang}')">🔊</button>`}
+function toggleLineValue(el){const v=el&&el.querySelector?el.querySelector('.value'):null; if(v)v.classList.toggle('hidden')}
+function line(label,val,textForAudio,lang,key,fallbackText='',fallbackLang='tr-TR'){const raw=val||'-', t=textForAudio||raw; const shown=esc(raw).replace(/\n/g,'<br>'); return `<div class="line" onclick="toggleLineValue(this)" title="Göster/Gizle"><div>${sp(t,lang,key,fallbackText,fallbackLang)}</div><div class="label">${esc(label)}</div><div class="value">${shown}</div></div>`}
+function dirCodes(){let codes=String(settings.dir||'NL_TR_EN').split('_').map(x=>x.trim().toUpperCase()).filter(x=>LANG_MAP[x]); const out=[]; codes.forEach(c=>{if(!out.includes(c))out.push(c)}); return out.length>=2?out:['NL','TR','EN']}
+function dirLabel(key){const preset=DIRS.find(d=>d[0]===key); if(preset)return preset[1]; const codes=String(key||'').split('_').filter(c=>LANG_MAP[c]); return codes.length?codes.map(c=>LANG_MAP[c].label).join(' + '):DIRS[0][1]}
+function langLabel(k){return LANG_MAP[k]?.label||k}
+function langVoice(k){return LANG_MAP[k]?.voice||'nl-NL'}
+function langField(k){return LANG_MAP[k]?.field||'nl'}
+function langLatinField(k){return LANG_MAP[k]?.latin||''}
+function fieldByLang(x,k){const m=LANG_MAP[k]||LANG_MAP.NL; return String((x&&x[m.field])||'')}
+function latinByLang(x,k){const f=langLatinField(k); return f?String((x&&x[f])||''):''}
+function displayByLang(x,k){const own=fieldByLang(x,k), lat=latinByLang(x,k); if((k==='AR'||k==='RU')&&own&&lat&&norm(own)!==norm(lat))return own+'\nTürk alfabesi: '+lat; return own||lat||''}
+function audioTextByLang(x,k){return fieldByLang(x,k)||latinByLang(x,k)||''}
+function fallbackTextByLang(x,k){return (k==='AR'||k==='RU')?(latinByLang(x,k)||fieldByLang(x,k)||''):''}
+function translationRows(x){const selected=dirCodes().filter(c=>c!=='NL'); const rows=[]; selected.forEach(c=>rows.push([langLabel(c),displayByLang(x,c),audioTextByLang(x,c),langVoice(c),c,fallbackTextByLang(x,c)])); return rows}
+
+function bestTranslationCode(x){return dirCodes().filter(c=>c!=='NL').find(c=>audioTextByLang(x,c)||displayByLang(x,c))||['TR','EN','AR','RU'].find(c=>audioTextByLang(x,c)||displayByLang(x,c))||'EN'}
+function bestTranslationText(x){const c=bestTranslationCode(x);return audioTextByLang(x,c)||displayByLang(x,c)||''}
+function bestTranslationFallback(x){const c=bestTranslationCode(x);return fallbackTextByLang(x,c)||''}
+function bestTranslationLang(x){return langVoice(bestTranslationCode(x))}
+function bestTranslationTextFromItems(items){const c=dirCodes().filter(x=>x!=='NL').find(c=>items.some(it=>audioTextByLang(it,c)))||'TR'; return items.map(it=>audioTextByLang(it,c)).filter(Boolean).join(' ')}
+function bestTranslationFallbackFromItems(items){const c=dirCodes().filter(x=>x!=='NL').find(c=>items.some(it=>fallbackTextByLang(it,c)))||'TR'; return items.map(it=>fallbackTextByLang(it,c)).filter(Boolean).join(' ')}
+function bestTranslationLangFromItems(items){const c=dirCodes().filter(x=>x!=='NL').find(c=>items.some(it=>audioTextByLang(it,c)))||'TR'; return langVoice(c)}
+
+function tools(){return `<div class="moduleTools"><button class="ghost iconBtn" onclick="expanded=!expanded;render()">${expanded?'×':'⛶'}</button></div>`}
+function modClass(){return 'card '+(expanded?'expanded':'')}
+function moduleNav(){return `<div class="moduleNav"><button class="ghost" onclick="goStart()">⏮ Başa</button><button class="ghost" onclick="navPrev()">‹ Geri</button><button class="ghost" onclick="navNext()">İleri ›</button><button class="ghost" onclick="randomItem()">🔀 Rasgele</button></div>`}
+function render(){updateHeaderMetrics(); setActiveTab(); if(mode==='learn')return renderLearn(); if(mode==='write')return renderWrite(); if(mode==='sentences')return renderSentences(); if(mode==='paragraph')return renderParagraph(); if(mode==='read')return renderRead(); if(mode==='list')return renderList(); if(mode==='quiz')return renderQuiz(); if(mode==='manage')return renderManage();}
+function setActiveTab(){document.querySelectorAll('.tabBtn').forEach(b=>b.classList.remove('active')); const map={learn:'tabLearn',write:'tabWrite',sentences:'tabSentences',paragraph:'tabParagraph',list:'tabList',quiz:'tabQuiz',read:'tabLearn',manage:'tabList'}; const el=$(map[mode]); if(el)el.classList.add('active')}
+function renderLearn(){const x=current(); if(!x){$('view').innerHTML='<div class="card">Veri yok.</div>';return} const s=sampleSource(x), known=isKnown(x.id), rem=!!reminders()[x.id]; let html=`<section class="${modClass()}">${tools()}<span class="badge">${esc(catName(x.cat))} • ${idx+1}/${filtered.length||1}</span><div class="word">${esc(x.nl)}</div>${line('Okunuş',x.read||x.nl,x.nl,'nl-NL','read'+x.id)}${line('Kök',x.root||'-',x.nl,'nl-NL','root'+x.id)}`; translationRows(x).forEach(r=>html+=line(r[0],r[1],r[2],r[3],r[4]+x.id,r[5])); html+=`<div class="row3"><button class="ghost" onclick="toggleAllRows()">Göster/Gizle</button><button class="${known?'ok known':'ok'}" onclick="markKnown()" onpointerdown="holdKnownStart()" onpointerup="holdKnownEnd()" onpointerleave="holdKnownEnd()">${known?'Biliyorum':'Bildim'}</button><button class="ghost ${rem?'goldActive':''}" onclick="toggleReminder()">Hatırlat</button></div>${moduleNav()}</section>`; html+=`<section class="card example"><span class="badge">Örnek cümle • ${esc(s.ref||s.src||sourceCat(s)||'Kaynak')}</span><div class="value">${esc(s.nl||'-')}</div><div class="row2"><button class="ghost" onclick="speakSafe('${enc(s.nl||'')}','nl-NL','exnl',this)">🔊 Cümleyi oku</button><button class="ghost" onclick="speakSafe('${enc(bestTranslationText(s))}','${bestTranslationLang(s)}','extr',this,'${enc(bestTranslationFallback(s))}','tr-TR')">🔊 Çeviriyi oku</button></div>`; translationRows(s).forEach(r=>{if(r[1]&&r[1]!=='-')html+=line(r[0],r[1],r[2],r[3],'ex'+r[4],r[5])}); html+='</section>'; $('view').innerHTML=html}
+function toggleAllRows(){document.querySelectorAll('.value').forEach(v=>v.classList.toggle('hidden'))}
+function renderWrite(){const x=current(); if(!x)return; const codes=dirCodes(); const promptCode=codes[0]||'NL'; const targets=codes.filter(c=>c!==promptCode); const prompt=displayByLang(x,promptCode)||x.nl; let html=`<section class="${modClass()}">${tools()}<span class="badge">Yazma • ${dirLabel(settings.dir)}</span><div class="word">${esc(prompt)}</div><div class="row2"><button class="ghost" onclick="speakSafe('${enc(audioTextByLang(x,promptCode)||x.nl)}','${langVoice(promptCode)}','writeword',this,'${enc(fallbackTextByLang(x,promptCode))}','tr-TR')">🔊 Ana metin</button><button class="ghost" onclick="gold('Seçili dil yönündeki karşılıkları yazın.')">ℹ Görev</button></div><div class="hint">Seçili dil yönüne göre karşılıkları yazın.</div>`; targets.forEach(c=>{html+=`<input id="ans_${c}" placeholder="${langLabel(c)}">`}); if(!targets.length)html+='<div class="goldNote">Bu dil yönünde yazılacak hedef dil bulunamadı.</div>'; html+=`<button onclick="checkWrite()">Kontrol et</button><div id="writeResult" class="note"></div>${moduleNav()}</section>`; $('view').innerHTML=html}
+function checkWrite(){const x=current(); if(!x)return; const codes=dirCodes(); const promptCode=codes[0]||'NL'; const targets=codes.filter(c=>c!==promptCode); let okAny=false, out=[]; targets.forEach(c=>{const el=$('ans_'+c), val=el?el.value:''; const ans=fieldByLang(x,c)||latinByLang(x,c); const ok=norm(val)===norm(ans); if(ok)okAny=true; out.push(langLabel(c)+': '+(ok?'✅ Doğru':'❌ '+esc(displayByLang(x,c)||ans||'-')))}); if(okAny)markQuizScore(); $('writeResult').innerHTML=out.join('<br>')||'Kontrol edilecek hedef dil yok.'}
+function renderSentences(){const w=current(), arr=sourcePool(w), s=arr[(idx+page)%Math.max(1,arr.length)]||sampleSource(w); let html=`<section class="${modClass()}">${tools()}<span class="badge">Gerçek cümle</span><div class="value">${esc(s.nl||'-')}</div><div class="row2"><button class="ghost" onclick="speakSafe('${enc(s.nl)}','nl-NL','sentnl',this)">🔊 Cümle</button><button class="ghost" onclick="speakSafe('${enc(bestTranslationText(s))}','${bestTranslationLang(s)}','senttr',this,'${enc(bestTranslationFallback(s))}','tr-TR')">🔊 Çeviri</button></div><div class="source">Kaynak: ${esc(s.ref||s.src||sourceCat(s)||'-')}</div>`; if(s.read)html+=line('Okunuş',s.read,s.nl,'nl-NL','sentread'); translationRows(s).forEach(r=>html+=line(r[0],r[1],r[2],r[3],'sent'+r[4],r[5])); html+=`<button onclick="page++;render()">Başka cümle</button>${moduleNav()}</section>`; $('view').innerHTML=html}
+function renderParagraph(){const w=current(), arr=sourcePool(w); let start=(idx*3+page*3)%Math.max(1,arr.length); let part=arr.slice(start,start+3); if(!part.length)part=[sampleSource(w)]; const join=k=>part.map(s=>s[k]).filter(Boolean).join(' '); const nl=join('nl'); let obj={}; LANGS.forEach(l=>{obj[l.field]=join(l.field); if(l.latin)obj[l.latin]=join(l.latin)}); let html=`<section class="${modClass()}">${tools()}<span class="badge">Paragraf</span><div class="value">${esc(nl||'-')}</div><div class="row2"><button class="ghost" onclick="speakSafe('${enc(nl)}','nl-NL','parnl',this)">🔊 Paragraf</button><button class="ghost" onclick="speakSafe('${enc(bestTranslationText(obj))}','${bestTranslationLang(obj)}','partr',this,'${enc(bestTranslationFallback(obj))}','tr-TR')">🔊 Çeviri</button></div><div class="source">Kaynak: ${esc(part.map(s=>s.ref||s.src||sourceCat(s)).filter(Boolean).join(' / ')||'-')}</div>`; translationRows(obj).forEach(r=>html+=line(r[0],r[1],r[2],r[3],'par'+r[4],r[5])); html+=`<button onclick="page++;render()">Başka paragraf</button>${moduleNav()}</section>`; $('view').innerHTML=html}
+function buildReadPages(){const src=selectedSources(); const chunks=[]; const per=4; for(let i=0;i<src.length;i+=per)chunks.push(src.slice(i,i+per)); if(!chunks.length){const words=selectedWords(); for(let i=0;i<words.length;i+=per)chunks.push(words.slice(i,i+per).map(w=>({nl:w.nl,read:w.read,en:w.en,tr:w.tr,ar:w.ar,arLatin:w.arLatin,ru:w.ru,ruLatin:w.ruLatin,cat:w.cat,source:w.cat})))} readPages=chunks.length?chunks:[[sampleSource(current())]]; if(readPage>=readPages.length)readPage=0}
+function renderRead(){buildReadPages(); const items=readPages[readPage]||[]; const join=k=>items.map(x=>x[k]).filter(Boolean).join(' '); const nl=join('nl'); let body=items.map(x=>{let t=`<p>${esc(x.nl||'')}`; translationRows(x).forEach(r=>{if(r[1]&&r[1]!=='-')t+=`<br><span class="goldNote">${esc(r[0])}: ${esc(r[1])}</span>`}); return t+'</p>'}).join('')||'<p>Bu kategori için okunacak metin bulunamadı.</p>'; $('view').innerHTML=`<section class="${modClass()}">${tools()}<span class="badge">Okuma • ${readPage+1}/${readPages.length}</span><div class="book"><div class="bookTitle">${esc(settings.cat==='ALL'?'Tüm Kategoriler':catName(settings.cat))}</div><div class="bookPage">${body}</div></div><div class="row2"><button class="ghost" onclick="speakSafe('${enc(nl)}','nl-NL','readnl',this)">🔊 Sayfayı oku</button><button class="ghost" onclick="speakSafe('${enc(bestTranslationTextFromItems(items))}','${bestTranslationLangFromItems(items)}','readtr',this,'${enc(bestTranslationFallbackFromItems(items))}','tr-TR')">🔊 Çeviri</button></div><div class="moduleNav"><button class="ghost" onclick="readPage=0;render()">⏮ Başa</button><button class="ghost" onclick="readPage=Math.max(0,readPage-1);render()">‹ Geri</button><button class="ghost" onclick="readPage=Math.min(readPages.length-1,readPage+1);render()">İleri ›</button><button class="ghost" onclick="readPage=Math.floor(Math.random()*readPages.length);render()">🔀 Rasgele</button></div></section>`}
+function renderList(){const arr=selectedWords(), size=30, pages=Math.max(1,Math.ceil(arr.length/size)); if(page>=pages)page=0; const part=arr.slice(page*size,page*size+size); let html=`<section class="${modClass()}">${tools()}<span class="badge">Liste • ${esc(settings.cat==='ALL'?'Tüm kategoriler':catName(settings.cat))}</span><div class="listPage"><span>${page+1}/${pages} • ${arr.length} kelime</span><span>30'arlı sayfa</span></div><div class="listBox">`; part.forEach((w,i)=>{const sub=dirCodes().filter(c=>c!=='NL').map(c=>displayByLang(w,c)).filter(Boolean).join(' • '); html+=`<div class="listItem"><div>${sp(audioTextByLang(w,'NL')||w.nl,'nl-NL','list'+w.id)}</div><div onclick="idx=${page*size+i};mode='learn';render()"><b>${esc(w.nl)}</b><small>${esc([w.read,sub].filter(Boolean).join(' • '))}</small></div><button class="ghost iconBtn" onclick="idx=${page*size+i};setMode('learn')">›</button></div>`}); html+=`</div><div class="moduleNav"><button class="ghost" onclick="page=0;render()">⏮ Başa</button><button class="ghost" onclick="page=Math.max(0,page-1);render()">‹ Geri</button><button class="ghost" onclick="page=Math.min(${pages-1},page+1);render()">İleri ›</button><button class="ghost" onclick="page=Math.floor(Math.random()*${pages});render()">🔀 Rasgele</button></div></section>`; $('view').innerHTML=html}
+function newQuiz(type){const arr=selectedWords(); const x=arr[Math.floor(Math.random()*Math.max(1,arr.length))]||allWords()[0]||{}; type=type||getJSON('quizType','choice'); const codes=dirCodes(); const promptCode=codes[0]||'NL'; let answerCode=codes.find(c=>c!==promptCode&&fieldByLang(x,c)); if(!answerCode)answerCode=codes.find(c=>c!==promptCode)||'TR'; let prompt=displayByLang(x,promptCode)||x.nl||'', answer=displayByLang(x,answerCode)||fieldByLang(x,answerCode)||latinByLang(x,answerCode)||''; if(!answer){answer=displayByLang(x,'NL')||x.nl||''; answerCode='NL'} const opts=[answer,...arr.filter(y=>y.id!==x.id).sort(()=>Math.random()-.5).slice(0,8).map(y=>displayByLang(y,answerCode)||fieldByLang(y,answerCode)||latinByLang(y,answerCode)).filter(Boolean)].filter(Boolean).filter((v,i,a)=>a.findIndex(z=>norm(z)===norm(v))===i).sort(()=>Math.random()-.5).slice(0,4); quiz={type,x,prompt,answer,opts,sel:null,checked:false,lang:langVoice(promptCode),promptCode,answerCode,answerLang:langVoice(answerCode)}; setJSON('quizType',type)}
+function quizLangs(){const c=dirCodes();return {prompt:c[0]||'NL',answer:c.find(x=>x!==(c[0]||'NL'))||'TR'}}
+function smartHint(){if(!quiz||!quiz.x)return 'İpucu hazırlanamadı.'; const used=[quiz.promptCode,quiz.answerCode]; const preferred=dirCodes().concat(LANGS.map(x=>x.code)); const third=preferred.find(k=>!used.includes(k)&&displayByLang(quiz.x,k)); if(third)return 'Üçüncü dil ipucu ('+langLabel(third)+'): '+displayByLang(quiz.x,third); const ans=String(quiz.answer||'').trim(); if(!ans)return 'Cevap verisi bulunamadı.'; const letters=ans.replace(/\s+/g,''); if(letters.length<=4)return 'Cevap kısa. Harf sayısı: '+letters.length+'. Ses ve bağlama dikkat edin.'; const mid=Math.floor(letters.length/2), frag=letters.slice(Math.max(0,mid-1),Math.min(letters.length,mid+2)); return 'Harf sayısı: '+letters.length+'. Orta bölümden '+frag.length+' harf: '+frag+'.'}
+function renderQuiz(){if(!quiz)newQuiz('choice'); let html=`<section class="${modClass()}">${tools()}<span class="badge">Quiz • ${langLabel(quiz.promptCode)} → ${langLabel(quiz.answerCode)}</span><div class="row3"><button class="ghost" onclick="newQuiz('choice');render()">Seçmeli</button><button class="ghost" onclick="newQuiz('listen');render()">Dinleme</button><button class="ghost" onclick="newQuiz('pronounce');render()">Telaffuz</button></div>`; const qAudio=audioTextByLang(quiz.x,quiz.promptCode)||quiz.prompt; const qFallback=fallbackTextByLang(quiz.x,quiz.promptCode); if(quiz.type==='listen')html+=`<div class="word">🔊 Dinle ve seç</div><button class="ghost" onclick="speakSafe('${enc(qAudio)}','${langVoice(quiz.promptCode)}','qlisten',this,'${enc(qFallback)}','tr-TR')">Telaffuzu oku</button>`; else html+=`<div class="word">${esc(quiz.prompt||quiz.x.nl||'')}</div><button class="ghost" onclick="speakSafe('${enc(qAudio)}','${langVoice(quiz.promptCode)}','qprompt',this,'${enc(qFallback)}','tr-TR')">🔊 Oku</button>`; if(quiz.type==='pronounce'){html+=`<div class="hint">Kelimeyi okuyun. Sistem duyduğu metni yaklaşık olarak karşılaştırır.</div><button onclick="startRecognitionSafe('${enc(fieldByLang(quiz.x,quiz.promptCode)||quiz.x.nl||'')}','${langVoice(quiz.promptCode)}')">🎙 Telaffuzumu ölç</button><div id="speechResult" class="note"></div>`} else {html+='<div class="opts">'+quiz.opts.map(o=>`<button class="opt ${quiz.checked?(norm(o)===norm(quiz.answer)?'good':(o===quiz.sel?'wrong':'')):''}" onclick="quizPickSafe('${enc(o)}')">${esc(o)}</button>`).join('')+'</div>'; if(quiz.checked)html+=`<div class="note ${norm(quiz.sel)===norm(quiz.answer)?'goodText':'badText'}">${norm(quiz.sel)===norm(quiz.answer)?'✅ Doğru':'❌ Yanlış. Doğru: '+esc(quiz.answer)}</div>`} html+=`<div class="row3"><button onclick="newQuiz(quiz.type);render()">Yeni soru</button><button class="ghost" onclick="gold(smartHint())">İpucu</button><button class="ghost" onclick="speakSafe('${enc(audioTextByLang(quiz.x,quiz.answerCode)||quiz.answer)}','${langVoice(quiz.answerCode)}','qans',this,'${enc(fallbackTextByLang(quiz.x,quiz.answerCode))}','tr-TR')">Doğruyu oku</button></div>${moduleNav()}</section>`; $('view').innerHTML=html}
+function quizPickSafe(encoded){quizPick(decodeURIComponent(encoded||''))}
+function quizPick(o){quiz.sel=o; quiz.checked=true; if(norm(o)===norm(quiz.answer))markQuizScore(); render()}
+function markQuizScore(){if(profile.email){let s=Number(localStorage.getItem(LS+'quizScore_'+profile.email)||0)+1;localStorage.setItem(LS+'quizScore_'+profile.email,s)}}
+function startRecognition(target,lang){window.lexSpeechResult=function(txt){const ok=similar(norm(txt),norm(target))>.62||norm(txt).includes(norm(target)); const el=$('speechResult'); if(el)el.innerHTML='Duyulan: <b>'+esc(txt||'-')+'</b><br>'+(ok?'✅ Doğru telaffuz':'❌ Tekrar deneyin. Doğrusu: '+esc(target)); if(ok)markQuizScore()}; try{if(window.AndroidBridge&&AndroidBridge.listen){AndroidBridge.listen(lang||'nl-NL','lexSpeechResult');return}}catch(e){} gold('Bu cihazda konuşma tanıma desteklenmiyor veya izin verilmedi.')}
+function similar(a,b){if(!a||!b)return 0; const A=a.split(' '),B=b.split(' '); let hit=0; A.forEach(x=>{if(B.includes(x))hit++}); return hit/Math.max(A.length,B.length,1)}
+function renderManage(){const cats=categories().filter(c=>c!=='ALL'); $('view').innerHTML=`<section class="${modClass()}">${tools()}<span class="badge">Ayarlar ve veri yönetimi</span><div class="formGrid"><button onclick="openProfile()">Giriş / kayıt</button><button class="ghost" onclick="openCatManager()">Kategori ekle / kaldır / ad değiştir</button><button class="ghost" onclick="openTextManager()">Kategoriye metin / PDF yükle veya çıkar</button><button class="ghost" onclick="showTemplate()">Çok dilli şablon örneklerini göster</button><button class="ghost" onclick="showAbout()">Uygulama hakkında</button><button class="ghost" onclick="openTickerManager()">Kayan yazıyı düzenle</button><button class="ghost" onclick="showReminderNow()">Hatırlatma kartını test et</button><button class="danger" onclick="confirmAction('Kullanıcı verilerini sıfırla','Skor, bildim işaretleri, hatırlatmalar ve özel veriler silinir. Onaylıyor musunuz?',resetUserData)">Kullanıcı verilerini sıfırla</button><div class="goldNote">Silme ve değiştirme işlemleri onay alınmadan uygulanmaz.</div></div>${moduleNav()}</section>`}
+function openProfile(){openModal('Giriş / kayıt',`<div class="formGrid"><input id="emailInput" type="email" placeholder="e-posta" value="${escAttr(profile.email)}"><button onclick="saveProfile()">Giriş / kayıt</button><button class="ghost" onclick="logoutProfile()">Çıkış</button><div class="goldNote">Skor ve ilerleme bu profile bağlı saklanır.</div></div>`)}
+function saveProfile(){profile.email=$('emailInput').value.trim(); localStorage.setItem(LS+'email',profile.email); closeModal(); gold('Profil kaydedildi.'); render()}
+function logoutProfile(){profile.email='';localStorage.removeItem(LS+'email');closeModal();gold('Çıkış yapıldı.');render()}
+function openCatManager(){const list=categories().filter(c=>c!=='ALL').map(c=>`<option value="${escAttr(c)}">${esc(catName(c))}</option>`).join(''); openModal('Kategori yönetimi',`<div class="formGrid"><label>Yeni kategori<input id="newCat" placeholder="Kategori adı"></label><button onclick="addCategory()">Kategori ekle</button><label>Mevcut kategori<select id="catManage">${list}</select></label><label>Yeni ad<input id="renameCat" placeholder="Yeni kategori adı"></label><button class="ghost" onclick="renameCategory()">Ad değiştir</button><button class="danger" onclick="removeCategory()">Kategori kaldır</button></div>`)}
+function addCategory(){const n=$('newCat').value.trim(); if(!n)return gold('Kategori adı boş olamaz.'); const c=customCats(); if(!c.includes(n))c.push(n); setJSON('customCats',c); closeModal(); gold('Kategori eklendi.'); render()}
+function renameCategory(){const old=$('catManage').value, neu=$('renameCat').value.trim(); if(!old||!neu)return gold('Kategori ve yeni ad gerekli.'); confirmAction('Kategori adı değişsin mi?',catName(old)+' → '+neu,()=>{const a=aliases();a[old]=neu;setJSON('catAliases',a);closeModal();render();gold('Kategori adı değiştirildi.')})}
+function removeCategory(){const c=$('catManage').value; confirmAction('Kategori kaldırılsın mı?',catName(c)+' gizlenecek; özel verileri varsa kaldırılacak.',()=>{let h=Array.from(hiddenCats()); if(!h.includes(c))h.push(c); setJSON('hiddenCats',h); setJSON('customWords',customWords().filter(w=>w.cat!==c)); setJSON('customSources',customSources().filter(s=>sourceCat(s)!==c)); if(settings.cat===c)settings.cat='ALL'; closeModal(); render(); gold('Kategori kaldırıldı.')})}
+function openTextManager(){const list=categories().filter(c=>c!=='ALL').map(c=>`<option value="${escAttr(c)}">${esc(catName(c))}</option>`).join(''); openModal('Metin / PDF yükleme ve çıkarma',`<div class="importGrid"><label>Kategori<select id="textCat">${list}</select></label><label>Yeni kategori adı <input id="newTextCat" placeholder="Boş bırakılırsa seçili kategoriye eklenir"></label><textarea id="bulkText" placeholder="Satır formatı: Hollandaca;Okunuş;İngilizce;Türkçe;Arapça;Arapça Türk alfabesi;Rusça;Rusça Türk alfabesi"></textarea><input id="importFile" type="file" accept=".txt,.csv,.json,.pdf,text/plain,text/csv,application/json,application/pdf"><div class="fileHint">PDF seçildiğinde metin çıkarılabiliyorsa dosya adıyla kategori yapılır; taranmış/görüntü PDF'lerinde metin çıkarılamayabilir.</div><button onclick="importTextRows()">Yazılı metni kategoriye ekle</button><button onclick="importSelectedFile()">Dosya / PDF aktar</button><button class="danger" onclick="clearCategoryCustomText()">Bu kategorideki özel metni çıkar</button></div>`)}
+function importTextRows(){const targetCat=($('newTextCat')?.value||'').trim()||$('textCat').value; const rows=($('bulkText')?.value||'').split(/\n+/).map(x=>x.trim()).filter(Boolean); if(!rows.length)return gold('Metin boş.'); confirmAction('Metin eklensin mi?',rows.length+' satır '+catName(targetCat)+' kategorisine eklenecek.',()=>{ingestRows(targetCat,rows,'Kullanıcı'); closeModal(); applyFilter(); gold('Metin eklendi.')})}
+
+function parseImportLine(r){const p=String(r||'').split(/[;\t]/).map(x=>x.trim()); if(p.length<2&&String(r||'').includes(','))p.splice(0,p.length,...String(r||'').split(',').map(x=>x.trim())); return {nl:p[0]||'',read:p[1]||'',en:p[2]||'',tr:p[3]||'',ar:p[4]||'',arLatin:p[5]||'',ru:p[6]||'',ruLatin:p[7]||'',root:p[8]||''}}
+function ingestRows(catNameValue,rows,ref){const words=customWords(),src=customSources(), cats=customCats(); const c=catNameValue||'Kullanıcı'; if(!cats.includes(c))cats.push(c); rows.forEach((r,i)=>{const row=typeof r==='string'?parseImportLine(r):r; const nl=row.nl||row.tr||row.en||row.arLatin||row.ruLatin||row.ar||row.ru||''; if(!nl)return; const id='CUS-'+Date.now()+'-'+i+'-'+Math.floor(Math.random()*9999); const item={id,cat:c,nl,read:row.read||'',root:row.root||'',en:row.en||'',tr:row.tr||'',ar:row.ar||'',arLatin:row.arLatin||'',ru:row.ru||'',ruLatin:row.ruLatin||''}; words.push(item); src.push({...item,id:id+'S',source:c,ref:ref||'Kullanıcı'})}); setJSON('customCats',cats); setJSON('customWords',words); setJSON('customSources',src)}
+async function importSelectedFile(){const f=$('importFile')?.files?.[0]; if(!f)return gold('Dosya seçilmedi.'); const base=(f.name||'PDF').replace(/\.[^.]+$/,'').trim()||'PDF'; const targetCat=($('newTextCat')?.value||'').trim()||(/pdf$/i.test(f.name||'')?base:($('textCat')?.value||base)); confirmAction('Dosya aktarılsın mı?',f.name+' dosyası '+targetCat+' kategorisine işlenecek.',async()=>{try{let text=''; if(/pdf$/i.test(f.name||'')||f.type==='application/pdf'){const buf=await f.arrayBuffer(); text=extractPdfTextFromArrayBuffer(buf); if(!text.trim()){gold('PDF metni çıkarılamadı. Taranmış veya sıkıştırılmış PDF olabilir.');return}} else {text=await f.text()} const rows=rowsFromImportedText(text, targetCat, /pdf$/i.test(f.name||'')); ingestRows(targetCat,rows,f.name); closeModal(); applyFilter(); gold('Dosya içeriği kategoriye işlendi.')}catch(e){gold('Dosya aktarımı yapılamadı: '+(e&&e.message?e.message:'hata'))}})}
+function decodePdfLiteral(s){let t=String(s||''); if(t.startsWith('(')&&t.endsWith(')'))t=t.slice(1,-1); return t.split('\\n').join(' ').split('\\r').join(' ').split('\\t').join(' ').split('\\(').join('(').split('\\)').join(')').split('\\\\').join('\\')}
+function decodePdfHex(h){h=String(h||'').replace(/[^0-9A-Fa-f]/g,''); let out=''; if(h.startsWith('FEFF')||h.startsWith('feff')){for(let i=4;i+3<h.length;i+=4)out+=String.fromCharCode(parseInt(h.slice(i,i+4),16)); return out} for(let i=0;i+1<h.length;i+=2){const c=parseInt(h.slice(i,i+2),16); if(c>=32&&c<127)out+=String.fromCharCode(c)} return out}
+function extractPdfTextFromArrayBuffer(buf){const bytes=new Uint8Array(buf); let parts=[]; for(let i=0;i<bytes.length;i+=65536){let s=''; const end=Math.min(bytes.length,i+65536); for(let j=i;j<end;j++)s+=String.fromCharCode(bytes[j]); parts.push(s)} const bin=parts.join(''); const out=[]; let m; const literal=/\((?:\\.|[^\\)]){2,}\)/g; while((m=literal.exec(bin))&&out.length<12000){const t=decodePdfLiteral(m[0]).replace(/[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]+/g,' ').trim(); if(/[A-Za-zÀ-žĞÜŞİÖÇğüşıöçА-Яа-яء-ي0-9]{2}/.test(t))out.push(t)} const hex=/<([0-9A-Fa-f\\s]{8,})>/g; while((m=hex.exec(bin))&&out.length<14000){const t=decodePdfHex(m[1]).trim(); if(/[A-Za-zÀ-žĞÜŞİÖÇğüşıöçА-Яа-яء-ي0-9]{2}/.test(t))out.push(t)} return out.join(' ').replace(/\\s+/g,' ').trim()}
+function rowsFromImportedText(text,cat,isPdf){const clean=String(text||'').replace(/\\r/g,'\\n').replace(/[ \\t]+/g,' ').trim(); const lines=clean.split(/\\n+/).map(x=>x.trim()).filter(Boolean); if(lines.some(l=>l.includes(';')||l.includes('\\t')))return lines; const sentences=(clean.match(/[^.!?。؟]+[.!?。؟]?/g)||[]).map(x=>x.trim()).filter(x=>x.length>2).slice(0,600); if(isPdf){const words=[]; const seen=new Set(); clean.split(/[^\\p{L}\\p{N}]+/u).map(x=>x.trim()).filter(x=>x.length>2).forEach(w=>{const n=norm(w); if(!seen.has(n)&&words.length<450){seen.add(n); words.push({nl:w,read:'',en:'',tr:'',ar:'',arLatin:'',ru:'',ruLatin:'',root:''})}}); sentences.forEach((s,i)=>words.push({nl:s,read:'',en:'',tr:'',ar:'',arLatin:'',ru:'',ruLatin:'',root:'PDF cümle'})); return words} return sentences.map(s=>({nl:s,read:'',en:'',tr:'',ar:'',arLatin:'',ru:'',ruLatin:'',root:''}))}
+
+function clearCategoryCustomText(){const c=$('textCat').value; confirmAction('Özel metin çıkarılsın mı?',catName(c)+' kategorisine eklediğiniz özel metinler silinir.',()=>{setJSON('customWords',customWords().filter(w=>w.cat!==c)); setJSON('customSources',customSources().filter(s=>sourceCat(s)!==c)); closeModal(); applyFilter(); gold('Özel metin çıkarıldı.')})}
+function showTemplate(){openModal('Şablon örnekleri',`<div class="goldNote">Çok dilli satır sırası:</div><pre class="note">Hollandaca;Okunuş;İngilizce;Türkçe;Arapça;Arapça Türk alfabesi;Rusça;Rusça Türk alfabesi
+recht;reht;law;hukuk;قانون;qanun;право;pravo
+aanvraag;anfrage;application;başvuru;طلب;talab;заявление;zayavleniye</pre><div class="goldNote">CSV/TXT/JSON/PDF yüklenebilir. PDF metni çıkarılabiliyorsa dosya adıyla kategori yapılır; taranmış PDF için metin çıkarılamayabilir.</div>`)}
+function showAbout(){openModal('Uygulama hakkında',`<div class="aboutText"><p><b>LexLingo</b>, hukuk dili ve genel dil öğrenimini aynı ekranda birleştiren çok modüllü bir çalışma uygulamasıdır. Uygulama Hollandaca, İngilizce, Türkçe, Arapça ve Rusça alanlarını destekler.</p><p><b>Dil yönü sistemi</b> iki, üç, dört veya beş dilli çalışma düzeni kurabilir. Seçilen dil dizilimi Kart, Yazma, Cümle, Paragraf, Okuma, Liste ve Quiz modüllerine aynı anda yansır. Hollandaca alan kendi temel yerini korur; seçilen diğer diller çeviri ve çalışma alanlarında sırasıyla gösterilir.</p><p><b>Arapça ve Rusça</b> alanlarında metin hem kendi alfabesiyle hem Türk alfabesine aktarılmış okuma biçimiyle tutulabilir. Cihaz ilgili dili veya alfabeyi seslendiremiyorsa aynı satırdaki Türk alfabesiyle yazılmış karşılık yedek okuma metni olarak kullanılır.</p><p><b>PDF aktarımı</b> metin çıkarılabilen PDF dosyalarını kategoriye dönüştürür. Çıkarılan metin kelime listesine, kaynak cümlelere, paragraf/okuma sayfalarına ve quiz/yazma çalışma alanlarına işlenir. Taranmış görüntü PDF'lerinde cihaz içinde metin çıkarılamayabilir.</p><p><b>Seslendirme</b> her satırdaki ayrı ses düğmesiyle çalışır. Ses düğmesine dokunmak buzlu alanı açıp kapatmaz; buzlu alanın göster/gizle hareketi satırın metin kısmına dokunularak yapılır.</p><p><b>Modüller</b>: Kart kelime ve çeviri çalıştırır; Yazma cevap yazdırır; Cümle ve Paragraf bağlam gösterir; Okuma kitap sayfası hissi verir; Liste seçili kategori kelimelerini sayfalar; Quiz seçmeli, dinleme ve telaffuz ölçme çalışmaları sağlar.</p></div>`)}
+function openTickerManager(){openModal('Kayan yazı yönetimi',`<div class="formGrid"><label>Kayan yazılar<textarea id="tickerInput" placeholder="Her satıra bir duyuru yazın.">${esc(tickerMessages().join('\n'))}</textarea></label><button onclick="saveTickerMessages()">Kayan yazıyı kaydet</button><div class="goldNote">Birden fazla satır yazarsanız duyurular kayan alanda arka arkaya gösterilir.</div></div>`)}
+function saveTickerMessages(){const rows=($('tickerInput')?.value||'').split(/\n+/).map(x=>x.trim()).filter(Boolean); if(!rows.length)return gold('Kayan yazı boş olamaz.'); setJSON('tickerMessages',rows); updateTicker(); closeModal(); gold('Kayan yazı güncellendi.')}
+function resetUserData(){['email','customWords','customSources','customCats','hiddenCats','catAliases','reminders',knownKey()].forEach(k=>localStorage.removeItem(LS+k)); profile.email=''; closeModal(); applyFilter(); gold('Kullanıcı verileri sıfırlandı.')}
+function openModal(title,body){$('modalBox').innerHTML=`<div class="modalHead"><span>${esc(title)}</span><button class="modalClose" onclick="closeModal()">×</button></div>${body}`; $('modalShade').classList.add('open')}
+function closeModal(){$('modalShade').classList.remove('open')}
+function closeModalShade(e){if(e.target.id==='modalShade')closeModal()}
+function openPicker(type){if(type==='cat'){const html=categories().map(c=>`<button class="modalOpt ${settings.cat===c?'active':''}" onclick="settings.cat='${escAttr(c)}';localStorage.setItem(LS+'cat',settings.cat);closeModal();applyFilter()"><span>${esc(c==='ALL'?'Tüm kategoriler':catName(c))}</span><span>${settings.cat===c?'●':'○'}</span></button>`).join(''); openModal('Kategori seçimi',html)} else {const presetHtml=DIRS.map(d=>`<button class="modalOpt ${settings.dir===d[0]?'active':''}" onclick="settings.dir='${d[0]}';localStorage.setItem(LS+'dir',settings.dir);closeModal();render()"><span>${d[1]}</span><span>${settings.dir===d[0]?'●':'○'}</span></button>`).join(''); const current=dirCodes(); const builder=`<div class="langBuilder"><div class="goldNote">Özel dil modülü: 2, 3, 4 veya 5 dil seçin. Seçim sırası modüllere yansır.</div><div class="langChoices">${LANGS.map(l=>`<button id="langPick_${l.code}" class="ghost ${current.includes(l.code)?'active':''}" onclick="toggleLangPick('${l.code}')">${l.code}<br>${l.label}</button>`).join('')}</div><div class="langOrder" id="langOrder">Seçili sıra: ${current.join(' → ')}</div><button onclick="saveCustomDir()">Bu dil modülünü kullan</button></div>`; openModal('Dil yönü seçimi',builder+presetHtml)}}
+
+let tempDirCodes=null;
+function toggleLangPick(c){tempDirCodes=tempDirCodes||dirCodes().slice(); if(tempDirCodes.includes(c))tempDirCodes=tempDirCodes.filter(x=>x!==c); else if(tempDirCodes.length<5)tempDirCodes.push(c); else return gold('En fazla beş dil seçilebilir.'); LANGS.forEach(l=>{const b=$('langPick_'+l.code); if(b)b.classList.toggle('active',tempDirCodes.includes(l.code))}); const o=$('langOrder'); if(o)o.textContent='Seçili sıra: '+(tempDirCodes.length?tempDirCodes.join(' → '):'En az iki dil seçin.')}
+function saveCustomDir(){const arr=(tempDirCodes||dirCodes()).filter(c=>LANG_MAP[c]); if(arr.length<2)return gold('En az iki dil seçmelisiniz.'); settings.dir=arr.join('_'); localStorage.setItem(LS+'dir',settings.dir); tempDirCodes=null; closeModal(); render()}
+
+function confirmAction(title,msg,cb){$('confirmTitle').textContent=title;$('confirmMsg').textContent=msg;confirmCb=cb;$('confirmBox').style.display='flex'}
+function closeConfirm(ok){$('confirmBox').style.display='none'; if(ok&&confirmCb)confirmCb(); confirmCb=null}
+function gold(msg){const t=$('toast'); t.textContent=msg; t.style.display='block'; clearTimeout(window.__toast); window.__toast=setTimeout(()=>t.style.display='none',2600)}
+function setMode(m){expanded=false; mode=m; page=0; if(m==='quiz')newQuiz(getJSON('quizType','choice')); render(); window.scrollTo({top:0,behavior:'smooth'})}
+function goStart(){if(mode==='read')readPage=0; else if(mode==='list')page=0; else idx=0; render()}
+function navNext(){if(mode==='read'){buildReadPages();readPage=Math.min(readPages.length-1,readPage+1)} else if(mode==='list'){page++} else idx=(idx+1)%Math.max(1,filtered.length); render()}
+function navPrev(){if(mode==='read')readPage=Math.max(0,readPage-1); else if(mode==='list')page=Math.max(0,page-1); else idx=(idx-1+Math.max(1,filtered.length))%Math.max(1,filtered.length); render()}
+function randomItem(){if(mode==='read'){buildReadPages();readPage=Math.floor(Math.random()*Math.max(1,readPages.length))} else if(mode==='list'){const arr=selectedWords();page=Math.floor(Math.random()*Math.max(1,Math.ceil(arr.length/30)))} else idx=Math.floor(Math.random()*Math.max(1,filtered.length)); render()}
+document.addEventListener('touchstart',e=>{if(e.touches.length===1)lastTouch={x:e.touches[0].clientX,y:e.touches[0].clientY,t:Date.now()}},{passive:true});
+document.addEventListener('touchend',e=>{if(!lastTouch)return; const t=e.changedTouches[0], dx=t.clientX-lastTouch.x, dy=t.clientY-lastTouch.y; if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.4){if($('modalShade').classList.contains('open')){closeModal();return} dx>0?navPrev():navNext();} lastTouch=null},{passive:true});
+window.addEventListener('resize',updateHeaderHeight);
+function showReminderNow(){const r=Object.values(reminders())[0]||current(); if(!r)return; const o=$('reminderOverlay'); o.innerHTML=`<div class="reminderCard"><button class="reminderClose" onclick="hideReminder()">×</button><span class="badge">LexLingo Hatırlatma</span><div class="word">${esc(r.nl||'')}</div><div class="value">${esc(r.tr||r.en||r.read||'')}</div><button class="ghost" onclick="speakSafe('${enc(r.nl||'')}','nl-NL','rem',this)">🔊 Oku</button></div>`; o.style.display='grid'; clearTimeout(window.__rem); window.__rem=setTimeout(hideReminder,15000)}
+function hideReminder(){$('reminderOverlay').style.display='none'}
+function scheduleReminder(){setInterval(()=>{const vals=Object.values(reminders()); if(vals.length&&document.visibilityState==='visible'&&Math.random()<.08)showReminderNow()},60000)}
+function init(){setScale(settings.scale); updateTicker(); filtered=selectedWords(); updateHeaderMetrics(); render(); scheduleReminder(); updateHeaderHeight();}
+init();
+</script>
+</body>
+</html>
