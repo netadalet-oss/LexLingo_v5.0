@@ -1,0 +1,1 @@
+v11: Logo belirginlestirildi; uygulama adi LexLingo yapildi; copyright eklendi; dil yonu secenekleri eklendi; kart/yazma/quiz dil yonune baglandi; cumle/paragraf ceviri alanlari mevcut ceviri veya terim karsiliklariyla dolduruldu; kucultme alt siniri %60 yapildi.

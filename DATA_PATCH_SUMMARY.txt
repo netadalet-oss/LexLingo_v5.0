@@ -1,0 +1,1 @@
+Flm_En_Tr_Lng.xlsx uygulandı. Kategori: 15; Kelime/ifade: 7500. Android ana kategori kaynağı app/src/main/assets/index.html içindeki DATA ve CATS sabitleridir.

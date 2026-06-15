@@ -1,0 +1,19 @@
+LexLingo v4.1 revizyonu
+
+Yeniden yazılan dosyalar:
+- flm_app/index.html
+- app/src/main/assets/index.html
+- app/src/main/java/com/netadalet/dutchmb/MainActivity.java
+
+Eklenenler:
+- Arapça ve Rusça dil alanları
+- NL, EN, TR, AR, RU dilleriyle 2/3/4/5 dilli özel modül oluşturma
+- Seçilen dil modülünün Kart, Yazma, Cümle, Paragraf, Okuma, Liste ve Quiz modüllerine yansıması
+- Arapça/Rusça için kendi alfabe + Türk alfabesiyle okuma alanı
+- Android TTS tarafında ar-SA ve ru-RU desteği ve yedek Türk alfabesiyle okuma
+- PDF dosyasını kategoriye aktarma denemesi
+- PDF/TXT/CSV/JSON içeriğini özel kategoriye işleme
+- Ses düğmelerinde satır göster/gizle olayından bağımsız dokunma davranışı
+
+Not:
+- PDF aktarımı, cihaz içinde metin çıkarılabilen PDF dosyalarında çalışır. Taranmış/görüntü PDF'leri OCR içermediği için metin çıkarılamayabilir.

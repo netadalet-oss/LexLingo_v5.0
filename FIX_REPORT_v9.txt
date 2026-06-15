@@ -1,0 +1,6 @@
+v9 fixes
+Words: 7500
+Categories: 15
+Source sentences: 6140
+Implemented: individual blur toggles, no advance on blur, global nav row, menu order, search all data, settings add/rename/delete/import, dynamic counters, sentence/paragraph sources.
+Not implemented: background use of installed ChatGPT app; Android apps cannot lawfully/reliably control ChatGPT app without an official API or user action. Manual aligned translation import is used.

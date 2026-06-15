@@ -1,0 +1,19 @@
+LexLingo v14 düzeltme raporu
+
+- Logo daha parlak/görünür hale getirildi; iç logo dokununca büyüme davranışı kaldırıldı.
+- WebView ve HTML viewport iki parmakla yakınlaştırmayı destekleyecek şekilde ayarlandı.
+- Launcher ikonları belirlenen LexLingo logosundan yeniden üretildi.
+- Ana kelime dışındaki Okunuş/EN/TR satırları daha ince ve ergonomik hale getirildi.
+- Hesap/profil alanı eklendi; giriş yapılınca kullanıcı adı/fotoğrafı üstte gösterilecek.
+- Google/Firebase giriş modülü eklendi: Firebase web config girilirse Google Sign-In ve Firestore ilerleme senkronizasyonu çalışacak.
+- Bildim ve İlerle butonları eklendi; giriş yapılınca puan ve ilerleme kaydedilir.
+- Genel ve kategori bazlı ilerleme şeridi eklendi.
+- Yazma alanında klavye açıldığında alanın yukarı kayması güçlendirildi.
+- Cümle/paragraf kaynağı olmayan kategoriler Metin havuzundan kaynak kullanır.
+- Çeviri yoksa kaynak cümlede geçen terimlerin EN/TR karşılıkları gösterilir.
+- Ayarlar bölümü daha sade hale getirildi; şablon indir/yükle ve kategori zorunlu kayıt akışı korundu.
+- 500 satırlık şablon güncellendi.
+- Liste bölümüne tik göster/gizle ve tikleri temizle eklendi; temizleme öncesi onay sorulur.
+- TXT/DOC çıktı alma butonları eklendi.
+- Android manifest'e metin paylaşımı/VIEW intent filtreleri eklendi (LexLingo ile aç altyapısı başlangıcı).
+- JS sözdizimi kontrol edildi.

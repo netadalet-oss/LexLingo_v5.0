@@ -1,0 +1,9 @@
+FIX v7
+- Ana çalışma dosyası: app/src/main/assets/index.html
+- XLSX'ten yeniden üretilen kelime sayısı: 7500
+- Kategori sayısı: 15
+- Cümle/paragraf kaynak kayıt sayısı: 14827
+- Eski 7392 statik sayaç 7500 dinamik sayaçla değiştirildi.
+- Cümle/Paragraf/Test/Kaynak modlarını bozan SOURCE_BANK eksikliği giderildi.
+- Kanun/metin kaynakları SOURCE_BANK içinde kategoriye bağlı çalışır.
+- GitHub Actions android-apk.yml sade debug APK üretir.

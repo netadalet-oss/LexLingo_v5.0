@@ -1,0 +1,13 @@
+LexLingo v13 düzeltmeleri
+- Flemenkçe ana kelime puntosu düşürüldü, koyuluk daha kibar hale getirildi.
+- Okunuş/EN/TR satırları büyütüldü; gizli yazısı kaldırılıp yalnız 'dokunun' bırakıldı.
+- Cümle/paragraf yazım ağırlığı düşürüldü; kaynak metin daha okunur hale getirildi.
+- Otomatik şablon cümleleri kaynak havuzundan filtrelendi; gerçek kaynak yoksa sahte cümle gösterilmez.
+- EN/TR çeviri yoksa ilgili cümle/paragraftaki terimlerin kategori sözlüğündeki karşılıkları gösterilir.
+- Quiz ipucu ilk harf yerine hedef dile göre diğer dil karşılığını gösterir.
+- Yazma alanlarında klavye açılınca ekran aşağı boşluk bırakır ve aktif alan merkeze kayar.
+- İç logo daha parlak ve görünür yapıldı; launcher ikonları aynı logodan yeniden üretildi.
+- WebView dosya seçici eklendi; dolu şablon yükleme Android içinde çalışacak şekilde MainActivity güncellendi.
+- 500 satır şablon numaralı ve 4 içerik sütunlu hale getirildi: No, Flemenkçe, Okunuş, İngilizce, Türkçe.
+- Şablonu ekranda göster/kopyala alternatifi eklendi.
+- Google/Firebase eşitleme için ayar açıklaması eklendi; Firebase config olmadan sahte Google giriş yapılmaz.

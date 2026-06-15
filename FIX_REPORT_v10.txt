@@ -1,0 +1,1 @@
+v10: Logo gömüldü; kategori gizle/değiştir davranışı default kategorilere de uygulandı; arama limiti genişletildi; eksik çeviri için API/ChatGPT arka plan kullanımının desteklenmediği açık bırakıldı.

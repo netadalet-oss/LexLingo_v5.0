@@ -1,0 +1,1 @@
+/* Data is embedded in index.html for Android WebView consistency. */

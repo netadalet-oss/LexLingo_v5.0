@@ -1,0 +1,14 @@
+LexLingo SES AKTIF PATCH
+
+Uygulananlar:
+1) Çalışan ses sürümündeki native Android TTS köprüsü korunmuştur:
+   - TextToSpeech başlatma
+   - AndroidBridge JavaScript arayüzü
+   - nl-NL / tr-TR / en-US dil seçimi
+   - TTS shutdown temizliği
+2) Yeni uygulama ekranı bozulmasın diye hedef APK içindeki index.html korunmuş,
+   yalnızca speakText fonksiyonu AndroidBridge öncelikli çalışacak şekilde değiştirilmiştir.
+3) Veri paketlerine, kategori dosyalarına ve mevcut UI akışına dokunulmamıştır.
+
+Not:
+Bu kaynak proje GitHub Actions / Android Gradle ile yeniden derlenebilir.

@@ -1,0 +1,12 @@
+FIX REPORT v8
+- Proje kökü incelendi ve Android build hatasının nedeni doğrulandı: gradlew eksikti.
+- gradlew ve gradlew.bat eklendi.
+- android-apk.yml, gradle/actions/setup-gradle ile Gradle 8.10.2 kuracak ve ./gradlew assembleDebug çalıştıracak şekilde düzeltildi.
+- app/src/main/assets/index.html baştan tek veri katmanına bağlandı.
+- 15 kategori / 7500 kelime DATA sabiti korunarak kullanılıyor.
+- LAW_BANK gerçek kaynak cümle havuzu olarak bağlandı.
+- Kart, Quiz, Yazma, Rastgele, Liste, Cümle, Paragraf ve Ayar/Veri yükleme sekmeleri aynı veri katmanını kullanacak şekilde yeniden yazıldı.
+- Metin/kategori/kelime manuel ekleme ekranı eklendi.
+- NL/EN/TR satır sayısı eşit değilse kayıt engellenir.
+- Kategori seçimi zorunludur.
+- JS sözdizimi node --check ile doğrulandı.

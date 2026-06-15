@@ -1,0 +1,18 @@
+FINAL COMPACT SIZE REWRITE
+
+Source package patched: LexLingo_DESIGN_BASE_SOUND_MODULE_GITHUB (1).zip
+Reference APK inspected: app-debug(19)(2).apk
+
+Applied changes:
+- Rewrote the active size/scaling layer in both app/src/main/assets/index.html and flm_app/index.html.
+- Kept data packs, TTS bridge, sound/module logic, category files, Android project files and GitHub workflows unchanged.
+- Replaced the non-functional scale handler with a working handler based on the reference APK range: 65% - 130%, default 100%.
+- The scale slider now applies to root rem size and UI internal measurements, not to page width.
+- Horizontal width/grid layout is preserved; size changes affect text, icons, button/card heights, padding, row heights and module vertical footprint.
+- All major UI modules were compacted by more than 40% relative to the previous bulky zip UI layer.
+- Top stats, progress row, scale row, selectors, search, navigation rows, cards, audio rows, module navigation and bottom tabs were rewritten as compact units.
+- JavaScript syntax was checked with node --check for both HTML entry points.
+
+Files changed:
+- app/src/main/assets/index.html
+- flm_app/index.html

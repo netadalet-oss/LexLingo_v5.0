@@ -1,0 +1,42 @@
+LexLingo revizyon raporu
+
+Yöntem:
+- Yama parçaları eklenerek değil, revizyon gerektiren temel dosyalar baştan sona yeniden yazıldı.
+- Veri paketleri, kategori içerikleri, logo ve GitHub proje yapısı korunmuştur.
+
+Baştan sona yeniden yazılan dosyalar:
+- flm_app/index.html
+- app/src/main/assets/index.html
+- app/src/main/java/com/netadalet/dutchmb/MainActivity.java
+- app/src/main/AndroidManifest.xml
+
+Uygulanan geliştirmeler:
+1. Tam navigasyon sistemi kuruldu: sağ/sol kaydırma, önceki/sonraki, modül ve sayfa geçişleri, açık pencere kapatma davranışı.
+2. Liste modülü seçili kategoriye göre 30 kelimelik sayfalarla çalışacak şekilde yeniden yazıldı; listedeki kelimelere seslendirme eklendi.
+3. Buton ve sekme yazılarında metin seçimi kapatıldı.
+4. Kart modülündeki örnek cümleye seslendirme eklendi.
+5. Ses düğmesine tekrar dokunulduğunda aktif seslendirme durdurulacak şekilde AndroidBridge.stop ve JS toggle sistemi eklendi.
+6. Bildim/Biliyorum mantığı yeniden yazıldı: giriş yapılan profilde Bildim ilerleme/skor ekler; Biliyorum butonuna basılı tutmak işareti kaldırır ve skor/ilerleme geri alınır.
+7. Sistem uyarıları koyu tema üzerinde Gold renkte gösterilecek şekilde düzenlendi.
+8. Türkçe metinler tr-TR, Hollandaca metinler nl-NL, İngilizce metinler en-US ile seslendirilecek şekilde ayrıldı.
+9. Logo/marka satırı sticky hale getirildi; sayfa veya modül kaydırılırken üstte kalır.
+10. Karttaki okunuş satırı fonetik yazıyı değil, ilgili Hollandaca kelimeyi nl-NL telaffuzuyla okuyacak şekilde düzenlendi.
+11. Ses simgelerine hafif Gold vurgu eklendi.
+12. Kelime ilerleme, ekran boyutu, kategori ve dil yönü satırları daha kompakt hale getirildi.
+13. Dil yönü seçimi tüm modüllerde çeviri sırasına uygulanacak şekilde merkezi translationRows mantığıyla kuruldu; Hollandaca ana alanı kendi yerinde korunur.
+14. Okuma modülü kitap sayfası hissiyle yeniden tasarlandı; seçilen kategorideki kaynak metinler sayfalara bölünerek okunabilir hale getirildi.
+15. Hatırlatma ekranına sağ üstte X kapatma düğmesi ve otomatik kapanma eklendi.
+16. Quiz modülüne seçmeli, dinleme ve telaffuz ölçme alt modları eklendi. Telaffuz için Android SpeechRecognizer köprüsü kuruldu.
+17. Modüllerde ekranı kapla özelliği fixed overlay olarak yeniden yazıldı; sağ üst X ile normal moda döner.
+18. Ayarlar bölümüne kategori ekleme, kaldırma, ad değiştirme, metin ekleme/çıkarma ve şablon örneği gösterme araçları eklendi.
+19. Silme, sıfırlama ve kategori/metin değiştirme işlemlerine onay penceresi eklendi.
+
+Korunanlar:
+- data_packs içindeki tüm lex_pack dosyaları
+- lex_manifest.js
+- logo.jpg
+- mevcut Android proje / GitHub yapısı
+
+Kontrol:
+- app/src/main/assets/index.html ve flm_app/index.html içindeki JavaScript sözdizimi node --check ile kontrol edildi.
+- ZIP bütünlüğü oluşturulduktan sonra test edilecektir.

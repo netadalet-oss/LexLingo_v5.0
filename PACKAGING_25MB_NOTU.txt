@@ -1,0 +1,8 @@
+LexLingo 25 MB güvenli paket
+
+- Görsel arayüz LexLingo-main kaynak paketinden korunmuştur.
+- Büyük LDS-1 veri tabanı tek parça dosya olarak tutulmamıştır.
+- Veri data_packs/lex_pack_001.js ... parçalarına ayrılmıştır.
+- Her tek dosya 25 MB sınırının altındadır.
+- app/src/main/assets ve flm_app tarafında aynı veri parçaları bulunur.
+- Commit hatasına sebep olan 59 MB lexlingo_lds1_database.js/json dosyaları pakete dahil edilmemiştir.

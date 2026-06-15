@@ -1,0 +1,1 @@
+{"name": "LexLingo", "short_name": "LexLingo", "start_url": "./index.html", "display": "standalone", "background_color": "#07111f", "theme_color": "#0b1220", "icons": [{"src": "logo.jpg", "sizes": "512x512", "type": "image/jpeg", "purpose": "any maskable"}]}

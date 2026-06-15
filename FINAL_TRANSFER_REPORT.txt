@@ -1,0 +1,1 @@
+Boyutlandırma ve ana uygulama tasarımı, yüklenen app-debug.apk içindeki assets/index.html dosyasından korunmuştur. AndroidBridge TTS, Web Speech yedeği, modül içi ses düğmeleri, Okuma/Yazma/Cümle/Paragraf/Quiz seslendirmeleri ve Başa/Geri/İleri/Rasgele modül gezinmeleri bu tasarıma aktarılmıştır. Veri paketleri ve logo da yüklenen APKdan alınmıştır.

@@ -1,0 +1,18 @@
+LexLingo v2.1 revizyon raporu
+
+Referans: LexLingo_v2.0-main(3)(2).zip
+Korunanlar: tüm data_packs/lex_pack_001.js ... lex_pack_029.js dosyaları, lex_manifest.js, mevcut kategori/veri yapısı ve ana arayüz korunmuştur.
+
+Eklenen/düzeltilen ana başlıklar:
+- Logo, kullanıcının son yüklediği logo görseliyle birebir değiştirildi (app assets ve flm_app).
+- Ayar modülünde kategori çıkar/ekle/değiştir, doğrudan metin yazma, mevcut kategoriye ekleme, TXT/CSV/JSON/LDS-1 aktarma, format şartları, telif/sorumluluk kuralları, hatırlatma ve ekran/ses ayarları yer alır.
+- Login yapılmadan skor, Biliyorum, kişisel hafıza ve hatırlatma işlemleri kalıcı çalışmaz; gold uyarı şeridi gösterilir.
+- Skor işlemleri en fazla 1 puandır. Bildim bir kez Biliyorum olur; basılı tutunca geri alınır ve skor düşer.
+- Tüm ana modüllerde küçük gold ses simgesiyle TTS seslendirme eklendi. Android tarafına native TextToSpeech köprüsü eklendi.
+- Quiz modülüne dinleme, dinle-yaz ve telaffuz pratiği eklendi. Mikrofon izni Manifest'e eklendi.
+- Ekran boyutu 45%-170% aralığına genişletildi. Yanlara doğru zoom yerine içerik/metin boyutlandırma kullanıldı; iki parmak hareketi korunmuştur.
+- Okuma modu Rasgele/Ayar üst bölgesine alındı, kitap okuma görünümü ve seslendirme eklendi.
+- Açılır modül kartlarına ekranı kapla ve kapat davranışı eklendi; kaplanmış modül maksimum %70 ekran yüksekliği kullanır.
+- Hatırlatma sistemi: son 20 kart, varsayılan 3 gün, ayar modülünden gün değiştirilebilir.
+
+Not: Gerçek cihazda TTS ve SpeechRecognition desteği Android/WebView sürümü ve cihazdaki dil paketlerine bağlıdır; native Android TTS köprüsü kelime/cümle/paragraf/okuma seslendirmesi için eklenmiştir.
