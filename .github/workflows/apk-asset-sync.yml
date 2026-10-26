@@ -11,6 +11,7 @@ on:
         description: Lowercase SHA-256 checksum of the APK
         type: string
         required: true
+        default: 455c3671e3eb521e8dfdaf3b35fdd6178d7961163d5ecd16870fb5f504390767
       prune:
         description: Remove repository assets absent from this APK
         type: boolean
