@@ -1,0 +1,110 @@
+name: Complete LexLingo APK asset synchronization
+on:
+  push:
+    branches:
+      - apk-asset-sync-helper-2026-10-26
+    paths:
+      - asset_payload/READY
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lexlingo-verified-asset-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout synchronization branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Reassemble, verify, and synchronize remaining APK assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64, hashlib, json, pathlib
+
+          payload = pathlib.Path("asset_payload")
+          root = pathlib.Path("app/src/main/assets")
+          if not (payload / "READY").is_file():
+              raise SystemExit("Payload READY marker missing")
+          manifest = json.loads((payload / "manifest.json").read_text("utf-8"))
+          permitted = {
+              "data_packs/lex_pack_013.js",
+              "docs/dutch_stories.pdf",
+              "audio/quran/erkan-mutlu-tesbihat-90.mp3",
+          }
+          if {r["path"] for r in manifest} != permitted or len(manifest) != 3:
+              raise SystemExit("Unexpected asset payload manifest")
+          for item in manifest:
+              prefix = item["prefix"]
+              if prefix not in {"js013", "pdf_stories", "audio_quran"}:
+                  raise SystemExit("Unexpected chunk prefix")
+              parts = sorted((payload / "chunks" / prefix).glob("part_*.b64"))
+              if len(parts) != item["parts"] or [p.name for p in parts] != [
+                  f"part_{i:03d}.b64" for i in range(item["parts"])
+              ]:
+                  raise SystemExit(f"Missing or extra chunks: {prefix}")
+              data = base64.b64decode("".join(p.read_text("ascii") for p in parts), validate=True)
+              if hashlib.sha256(data).hexdigest() != item["sha256"]:
+                  raise SystemExit(f"SHA-256 mismatch: {item['path']}")
+              git_digest = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
+              if git_digest != item["git_blob_sha1"]:
+                  raise SystemExit(f"Git SHA mismatch: {item['path']}")
+              destination = root / item["path"]
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              destination.write_bytes(data)
+
+          expected = {}
+          for line in pathlib.Path("APK_ASSETS_SHA1.tsv").read_text("utf-8").splitlines():
+              name, digest = line.split("\t")
+              if name.startswith("/") or ".." in pathlib.PurePosixPath(name).parts or name in expected:
+                  raise SystemExit(f"Unsafe or duplicate APK path: {name}")
+              expected[name] = digest
+          if len(expected) != 632:
+              raise SystemExit(f"Expected 632 assets, found {len(expected)}")
+          for asset in root.rglob("*"):
+              if asset.is_file() and asset.relative_to(root).as_posix() not in expected:
+                  asset.unlink()
+          actual = {p.relative_to(root).as_posix() for p in root.rglob("*") if p.is_file()}
+          if actual != set(expected):
+              raise SystemExit(f"Asset path mismatch: missing={set(expected)-actual} extra={actual-set(expected)}")
+          for name, digest in expected.items():
+              data = (root / name).read_bytes()
+              computed = hashlib.sha1(b"blob " + str(len(data)).encode() + b"\0" + data).hexdigest()
+              if computed != digest:
+                  raise SystemExit(f"Content mismatch: {name}")
+          print(f"PASS: {len(expected)} assets byte-identical to reference APK")
+          PY
+
+      - name: Configure Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Configure Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+
+      - name: Build Android debug APK
+        run: gradle --no-daemon assembleDebug
+
+      - name: Commit verified assets and remove temporary chunks
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -rf asset_payload
+          git add -A app/src/main/assets
+          git diff --cached --quiet && { echo "No changes"; exit 0; }
+          git commit -m "Complete exact synchronization of 632 LexLingo APK assets"
+          git push origin "HEAD:$GITHUB_REF_NAME"
