@@ -1,0 +1,113 @@
+name: LexLingo APK Asset Sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      apk_url:
+        description: Direct HTTPS URL for the reference base.apk
+        type: string
+        required: true
+      apk_sha256:
+        description: Lowercase SHA-256 checksum of the APK
+        type: string
+        required: true
+        default: 455c3671e3eb521e8dfdaf3b35fdd6178d7961163d5ecd16870fb5f504390767
+      prune:
+        description: Remove repository assets absent from this APK
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lexlingo-apk-sync-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync-apk-assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout selected branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Download and authenticate reference APK
+        env:
+          APK_URL: ${{ inputs.apk_url }}
+          APK_SHA256: ${{ inputs.apk_sha256 }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$APK_URL" == https://* ]] || { echo "::error::APK URL must be HTTPS"; exit 1; }
+          [[ "$APK_SHA256" =~ ^[0-9a-f]{64}$ ]] || { echo "::error::Invalid SHA-256 checksum"; exit 1; }
+          curl --fail --location --silent --show-error --retry 3 --connect-timeout 20 --max-time 900 --max-filesize 300000000 "$APK_URL" -o "$RUNNER_TEMP/reference-base.apk"
+          printf "%s  %s\n" "$APK_SHA256" "$RUNNER_TEMP/reference-base.apk" | sha256sum -c -
+
+      - name: Copy exact APK assets
+        env:
+          PRUNE_ASSETS: ${{ inputs.prune }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$PRUNE_ASSETS" == "true" ]]; then
+            python3 tools/sync_assets_from_apk.py "$RUNNER_TEMP/reference-base.apk" --repo . --apply --prune
+          else
+            python3 tools/sync_assets_from_apk.py "$RUNNER_TEMP/reference-base.apk" --repo . --apply
+          fi
+
+      - name: Assert every APK asset matches
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, os, pathlib, zipfile
+          apk_path = pathlib.Path(os.environ["RUNNER_TEMP"]) / "reference-base.apk"
+          root = pathlib.Path("app/src/main/assets")
+          count = 0
+          with zipfile.ZipFile(apk_path) as source:
+              for info in source.infolist():
+                  if info.is_dir() or not info.filename.startswith("assets/"):
+                      continue
+                  rel = pathlib.PurePosixPath(info.filename[7:])
+                  if rel.is_absolute() or ".." in rel.parts:
+                      raise SystemExit(f"Unsafe member: {info.filename}")
+                  actual = (root / rel).read_bytes()
+                  expected = source.read(info.filename)
+                  if hashlib.sha256(actual).digest() != hashlib.sha256(expected).digest():
+                      raise SystemExit(f"Asset mismatch: {info.filename}")
+                  count += 1
+          if not count:
+              raise SystemExit("APK did not include any assets")
+          print(f"All {count} APK assets verified byte for byte")
+          PY
+
+      - name: Install Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+
+      - name: Build Android debug APK
+        run: gradle --no-daemon assembleDebug
+
+      - name: Commit and push only after verification and build
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -A app/src/main/assets
+          if git diff --cached --quiet; then
+            echo "Assets are already synchronized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Sync LexLingo WebView assets from verified APK"
+          git push origin "HEAD:${{ github.ref_name }}"
