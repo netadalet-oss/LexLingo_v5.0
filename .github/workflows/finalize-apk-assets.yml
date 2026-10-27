@@ -1,0 +1,53 @@
+name: Finalize exact LexLingo APK assets
+
+on:
+  push:
+    branches:
+      - apk-asset-sync-helper-2026-10-26
+    paths:
+      - asset_payload/READY
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lexlingo-final-apk-asset-import
+  cancel-in-progress: false
+
+jobs:
+  import-exact-assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Check the authorized import marker
+        id: marker
+        shell: bash
+        run: |
+          if [ -f asset_payload/READY ]; then
+            echo "should_import=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_import=false" >> "$GITHUB_OUTPUT"
+            echo "Import marker was removed by a previous successful run."
+          fi
+
+      - name: Reassemble and verify all 632 reference APK assets
+        if: steps.marker.outputs.should_import == 'true'
+        run: python3 tools/reconstruct_final_apk_assets.py
+
+      - name: Commit only if all original bytes match
+        if: steps.marker.outputs.should_import == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rm -rf -- asset_payload/chunks asset_payload/READY
+          git add -A -- app/src/main/assets
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Complete byte-exact sync of all 632 assets from reference APK"
+          git push origin "HEAD:$GITHUB_REF_NAME"
