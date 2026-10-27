@@ -1,0 +1,54 @@
+name: Complete LexLingo APK asset synchronization
+on:
+  push:
+    branches:
+      - apk-asset-sync-helper-2026-10-26
+    paths:
+      - apk_final3/READY
+permissions:
+  contents: write
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Reconstruct three remaining assets and verify SHA-256
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64, gzip, hashlib, pathlib
+          base = pathlib.Path("apk_final3")
+          assert (base / "READY").is_file()
+          records = {
+            "opening_audio": ("audio/quran/erkan-mutlu-tesbihat-90.mp3", "accf5b1705b856742efcdeb3ba16edf6f27f37f20e87c021f3d388e7d801e8c3"),
+            "stories_pdf": ("docs/dutch_stories.pdf", "3837caff64a6b9eff198c8857064f87fc186338e920fbde9966bd32a30692a1e"),
+            "lex_pack_013": ("data_packs/lex_pack_013.js", "b51316ca49f9f1fb7bf2b2161548491c103f68f0dae0b940baaebec3dc9a8321")
+          }
+          root = pathlib.Path("app/src/main/assets")
+          for key, (relative_path, expected_hash) in records.items():
+              parts = sorted((base / key).glob("part_*.b64"))
+              if not parts:
+                  raise SystemExit(f"Missing parts for {key}")
+              encoded = "".join(p.read_text(encoding="ascii").strip() for p in parts)
+              raw = gzip.decompress(base64.b64decode(encoded, validate=True))
+              actual_hash = hashlib.sha256(raw).hexdigest()
+              if actual_hash != expected_hash:
+                  raise SystemExit(f"SHA-256 mismatch: {relative_path}")
+              dest = root / relative_path
+              dest.parent.mkdir(parents=True, exist_ok=True)
+              dest.write_bytes(raw)
+              print(f"PASS {relative_path} ({len(raw)} bytes)")
+          PY
+      - name: Commit verified files, clean transfer staging
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -A app/src/main/assets
+          git rm -rf apk_final3
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Finish APK asset sync: 632 byte-matched assets"
+          git push origin "HEAD:$GITHUB_REF_NAME"
