@@ -1,42 +1,44 @@
-# LexLingo — APK bayt-bazlı eşitleme durum raporu (27 Ekim 2026)
+# LexLingo — APK kaynak varlıklarını birebir eşitleme raporu
 
-Kaynak: Kullanıcının sağladığı `base.apk`, SHA-256 `455c3671e3eb521e8dfdaf3b35fdd6178d7961163d5ecd16870fb5f504390767`.
+**Tarih:** 27 Ekim 2026
 
-Bu rapor, `apk-asset-sync-helper-2026-10-26` dalının GitHub ağaç SHA'ları ile yerel APK içindeki **632** `assets/` dosyasının Git blob SHA-1 değerleri karşılaştırılarak oluşturuldu. Son doğrulanan commit: `7a00852003717dfd14e0a6bd992d970402a3e7a8`.
+**Kaynak APK:** Kullanıcının sağladığı `base.apk`
+**APK SHA-256:** `455c3671e3eb521e8dfdaf3b35fdd6178d7961163d5ecd16870fb5f504390767`
+**Hedef dal:** `apk-asset-sync-helper-2026-10-26` — PR #1
+
+## Doğrulanmış son durum
 
 | Ölçüt | Dosya |
 |---|---:|
-| APK kaynak varlıkları | **632** |
-| GitHub `app/src/main/assets/` dosyaları | **373** |
-| Bayt-bazında birebir eşleşenler | **358** |
-| GitHub dalında bulunmayanlar | **261** |
-| İçeriği farklı olanlar | **13** |
-| Yalnızca GitHub'da bulunan ek dosyalar | **2** |
+| Referans APK `assets/` altındaki dosyalar | **632** |
+| GitHub'da APK ile bayt-bazında eşleşenler | **632** |
+| Eksik dosyalar | **0** |
+| Farklı içerikli dosyalar | **0** |
+| Önceden GitHub'da var olan, APK varlıklarına dahil olmayan ek dosyalar | **2** |
 
-## Bu aktarımdaki doğrulanan ilerleme
+Orijinal APK ile karşılaştırma, tüm 632 dosyanın **Git blob SHA-1** değeri üzerinden bağımsız olarak tekrar yapıldı. Referans SHA listesi `asset_payload/APK_ASSET_GIT_SHA1.tsv` ve `APK_ASSETS_SHA1.tsv` dosyalarında bulunur. Bunlar APK'deki varlıkların her birinin birebir baytlarını temsil eder.
 
-Başlangıçta 180 dosya eşleşiyordu. Altı ayrı commit ile APK'deki **178 trafik görseli** daha GitHub dalına alındı. GitHub blob SHA-1 değerleri referans APK'deki aynı dosyaların hesaplanan SHA-1 değerleriyle karşılaştırılarak doğrulandı:
+Son üç dosya aşağıdaki SHA-256'larla doğrulanarak GitHub Actions üzerinde birleştirildi:
 
-- `3ea740c780668b14e1fa5e4decb68a3290ca7be7`: +34
-- `eeb508bd3881d758a9c1680f884c40847ba7e0c4`: +33
-- `e407c64e186b296bbd3d79142e26d2f7968ffcd8`: +33
-- `709009f686608a07286ab3993d194242bc6c50c0`: +33
-- `0898374bc3a9cd2748912f9f689dc291c0f1ba43`: +34
-- `7a00852003717dfd14e0a6bd992d970402a3e7a8`: +11
+| APK varlığı | SHA-256 |
+|---|---|
+| `data_packs/lex_pack_013.js` | `b51316ca49f9f1fb7bf2b2161548491c103f68f0dae0b940baaebec3dc9a8321` |
+| `docs/dutch_stories.pdf` | `3837caff64a6b9eff198c8857064f87fc186338e920fbde9966bd32a30692a1e` |
+| `audio/quran/erkan-mutlu-tesbihat-90.mp3` | `accf5b1705b856742efcdeb3ba16edf6f27f37f20e87c021f3d388e7d801e8c3` |
 
-9 trafik görseli güvenlik kontrolü nedeniyle aktarılamadı; bu dosyalar atlandı, içerikleri değiştirilmedi.
+**Başarılı otomatik aktarım:** https://github.com/netadalet-oss/LexLingo_v5.0/actions/runs/40568084707
 
-## Hâlâ aktarılması gerekenler
+**Son üç dosyayı içeren commit:** `5fc450bee35657fefa905807c800f20fd87ece7d`
 
-- 127 Hollandaca telaffuz sesi (`audio/dutch_pronunciation`)
-- 78 kitap sayfası görseli (`knm_revision/book`)
-- 13 `spot/v2` dosyası
-- 11 Mushaf sesi; 10 dinleme sesi; 1 açılış WAV ve 1 Kur'an MP3
-- 8 PDF, 2 trafik WebP, 1 gramer görseli ve 9 engellenen trafik görseli
-- 13 farklı veri paketi: `lex_pack_003.js`, `005.js`, `006.js`, `007.js`, `012.js`, `013.js`, `014.js`, `021.js`, `022.js`, `024.js`, `026.js`, `027.js`, `028.js`
+GitHub'da korunmuş iki repo-özel dosya:
+- `app/src/main/assets/Flm_En_Tr_Lng.xlsx`
+- `app/src/main/assets/LexLingo_500_satir_sablon.csv`
 
-GitHub'a özgü iki dosya: `Flm_En_Tr_Lng.xlsx` ve `LexLingo_500_satir_sablon.csv`.
+## Açık kontrol noktaları
 
-## Sürüm yayınlama koşulları
+- APK'deki **WebView HTML, JavaScript, medya ve PDF** gibi `assets/` dosyaları birebir eşleşir.
+- APK, Android'in derlenmiş `classes.dex` içeriklerini taşır; orijinal Java/Kotlin kaynak kodunu ve Gradle yapılandırmasını bayt-bazında birebir yeniden oluşturduğu **iddia edilmez**.
+- Android'in GitHub kaynaklarından yeniden derlenmesi ayrı bir testtir; sonucu GitHub Actions üzerinden doğrulanmalıdır.
+- Üçüncü taraf PDF/ses/görsellerin kamuya açık repoda yayımlama hakları ayrıca kontrol edilmelidir.
+- PR #1 derleme ve gözden geçirme tamamlanıncaya kadar **taslak** durumunda tutulur; `main` dalına otomatik olarak birleştirilmez.
 
-Bu PR **taslak** kalmalıdır. 632 dosyanın tamamı eşleşmeden, kullanıcı tarafından sağlanan içeriğin yayımlanabilirliği gözden geçirilmeden ve Android derleme/cihaz testleri başarıyla tamamlanmadan `main` üzerine birleştirilmemelidir. Derlenmiş APK, orijinal Android Java/Kotlin kaynaklarını birebir geri getirmez.
