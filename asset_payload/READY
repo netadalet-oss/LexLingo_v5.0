@@ -1,0 +1,4 @@
+Reference APK SHA256: 455c3671e3eb521e8dfdaf3b35fdd6178d7961163d5ecd16870fb5f504390767
+Authorized by the repository owner in this conversation to finish importing the three remaining APK assets.
+GitHub workflow must verify SHA-256 and Git blob SHA-1 for every reconstructed file, then verify all 632 original APK assets against asset_payload/APK_ASSET_GIT_SHA1.tsv.
+This marker is removed only after a successful import and verification.
