@@ -1,33 +1,42 @@
-# LexLingo APK byte-exact synchronization — verified progress (2026-10-26)
+# LexLingo — APK bayt-bazlı eşitleme durum raporu (27 Ekim 2026)
 
-Reference APK: user-supplied `base.apk`, SHA-256 `455c3671e3eb521e8dfdaf3b35fdd6178d7961163d5ecd16870fb5f504390767`.
+Kaynak: Kullanıcının sağladığı `base.apk`, SHA-256 `455c3671e3eb521e8dfdaf3b35fdd6178d7961163d5ecd16870fb5f504390767`.
 
-**Current audit of branch `apk-asset-sync-helper-2026-10-26`:**
+Bu rapor, `apk-asset-sync-helper-2026-10-26` dalının GitHub ağaç SHA'ları ile yerel APK içindeki **632** `assets/` dosyasının Git blob SHA-1 değerleri karşılaştırılarak oluşturuldu. Son doğrulanan commit: `7a00852003717dfd14e0a6bd992d970402a3e7a8`.
 
-| Metric | Files |
+| Ölçüt | Dosya |
 |---|---:|
-| Reference APK files under `assets/` | 632 |
-| Tracked files under `app/src/main/assets/` | 195 |
-| Verified byte-identical to APK | **180** |
-| Missing from the GitHub branch | **439** |
-| Present with different bytes | **13** |
-| GitHub-only files, absent from APK assets | **2** |
+| APK kaynak varlıkları | **632** |
+| GitHub `app/src/main/assets/` dosyaları | **373** |
+| Bayt-bazında birebir eşleşenler | **358** |
+| GitHub dalında bulunmayanlar | **261** |
+| İçeriği farklı olanlar | **13** |
+| Yalnızca GitHub'da bulunan ek dosyalar | **2** |
 
-The 13 divergent files are `data_packs/lex_pack_{003,005,006,007,012,013,014,021,022,024,026,027,028}.js`. The two GitHub-only files are `Flm_En_Tr_Lng.xlsx` and `LexLingo_500_satir_sablon.csv`.
+## Bu aktarımdaki doğrulanan ilerleme
 
-## Latest successfully committed transfers
+Başlangıçta 180 dosya eşleşiyordu. Altı ayrı commit ile APK'deki **178 trafik görseli** daha GitHub dalına alındı. GitHub blob SHA-1 değerleri referans APK'deki aynı dosyaların hesaplanan SHA-1 değerleriyle karşılaştırılarak doğrulandı:
 
-- `b41db7d99ca745e4b680e96d0b7128e788d49b62`: 21 traffic WebP assets.
-- `1ed8a53eadf8f15264834dc56fcc48088288162b`: 32 book JPG assets.
-- `08a2ed875e6adc1175f2d5232bbbd94ce423c163`: 32 book JPG assets.
-- `94b37fb6408db570806a949f92829d9dfe3f71d1`: 28 book JPG assets.
+- `3ea740c780668b14e1fa5e4decb68a3290ca7be7`: +34
+- `eeb508bd3881d758a9c1680f884c40847ba7e0c4`: +33
+- `e407c64e186b296bbd3d79142e26d2f7968ffcd8`: +33
+- `709009f686608a07286ab3993d194242bc6c50c0`: +33
+- `0898374bc3a9cd2748912f9f689dc291c0f1ba43`: +34
+- `7a00852003717dfd14e0a6bd992d970402a3e7a8`: +11
 
-113 additional APK files were matched during this synchronization session (67 -> 180). Each successful upload returned a Git blob SHA-1 identical to the SHA-1 computed locally over the exact APK asset bytes; repository tree entries were subsequently checked against the original 632-file hash audit.
+9 trafik görseli güvenlik kontrolü nedeniyle aktarılamadı; bu dosyalar atlandı, içerikleri değiştirilmedi.
 
-## Limitations / release gates
+## Hâlâ aktarılması gerekenler
 
-- The full APK import is **not complete**. Some attempted assets were blocked by the connected upload channel's safety controls, and these were not committed.
-- `main` was **not modified**. Keep PR #1 as **draft** until assets are complete, Android build and device tests have passed, and public redistribution rights for bundled content have been checked.
-- There were no GitHub Actions runs associated with this PR branch at the time of this report. A successful Android build cannot be claimed.
-- Exact APK `assets/` synchronization does not reconstruct the original Android Java/Kotlin source from its compiled DEX.
-- The provided `tools/sync_assets_from_apk.py` remains the lossless local import mechanism for a complete, authorized APK transfer.
+- 127 Hollandaca telaffuz sesi (`audio/dutch_pronunciation`)
+- 78 kitap sayfası görseli (`knm_revision/book`)
+- 13 `spot/v2` dosyası
+- 11 Mushaf sesi; 10 dinleme sesi; 1 açılış WAV ve 1 Kur'an MP3
+- 8 PDF, 2 trafik WebP, 1 gramer görseli ve 9 engellenen trafik görseli
+- 13 farklı veri paketi: `lex_pack_003.js`, `005.js`, `006.js`, `007.js`, `012.js`, `013.js`, `014.js`, `021.js`, `022.js`, `024.js`, `026.js`, `027.js`, `028.js`
+
+GitHub'a özgü iki dosya: `Flm_En_Tr_Lng.xlsx` ve `LexLingo_500_satir_sablon.csv`.
+
+## Sürüm yayınlama koşulları
+
+Bu PR **taslak** kalmalıdır. 632 dosyanın tamamı eşleşmeden, kullanıcı tarafından sağlanan içeriğin yayımlanabilirliği gözden geçirilmeden ve Android derleme/cihaz testleri başarıyla tamamlanmadan `main` üzerine birleştirilmemelidir. Derlenmiş APK, orijinal Android Java/Kotlin kaynaklarını birebir geri getirmez.
