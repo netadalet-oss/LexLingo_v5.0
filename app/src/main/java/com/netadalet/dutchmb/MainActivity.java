@@ -93,7 +93,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         ttsReady = status == TextToSpeech.SUCCESS;
         if (ttsReady && tts != null) {
             tts.setLanguage(new Locale("nl", "NL"));
-            tts.setSpeechRate(0.88f);
+            tts.setSpeechRate(0.78f);
             tts.setPitch(1.0f);
         }
     }
@@ -141,7 +141,8 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         try {
             tts.stop();
             tts.setLanguage(outputLocale);
-            tts.setSpeechRate(0.88f);
+            boolean isDutchOutput = "nl".equalsIgnoreCase(outputLocale.getLanguage());
+            tts.setSpeechRate(isDutchOutput ? 0.78f : 0.88f);
             tts.setPitch(1.0f);
             tts.speak(output, TextToSpeech.QUEUE_FLUSH, null, "lexlingo_tts");
         } catch (Exception ignored) {}
