@@ -3223,5 +3223,27 @@ button.ghost,.tabBtn,.pickerBtn{background:linear-gradient(165deg,var(--ref-pane
 </script>
 <script src="dialogue_data_v135.js"></script>
 <script src="dialogue_module_v135.js"></script>
+
+<script id="lex-dutch-slow-tts-v136">
+/* LEX_DUTCH_SLOW_TTS_V136: keep Dutch browser/WebView fallback pronunciation slightly slower. */
+(function(){
+  try{
+    var synth=window.speechSynthesis;
+    if(!synth||typeof synth.speak!=='function'||synth.__lexDutchSlowV136)return;
+    var original=synth.speak.bind(synth);
+    synth.speak=function(u){
+      try{
+        var lang=String((u&&u.lang)||'').toLowerCase();
+        if(u&&lang.indexOf('nl')===0){
+          var r=Number(u.rate||1);
+          u.rate=Math.max(0.1,Math.min(10,r*0.89));
+        }
+      }catch(e){}
+      return original(u);
+    };
+    synth.__lexDutchSlowV136=true;
+  }catch(e){}
+})();
+</script>
 </body>
 </html>
